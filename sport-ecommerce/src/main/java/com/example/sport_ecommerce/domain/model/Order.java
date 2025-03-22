@@ -14,9 +14,11 @@ public class Order {
     private UUID id;
     private User user;
     private List<Configuration> items;
+    private float totalPrice;
 
-    public Order(User user, List<Configuration> items) {
+    public Order(User user, List<Configuration> items, float totalPrice) {
         this.user = user;
         this.items = items;
+        this.totalPrice = totalPrice;
     }
 }

@@ -9,16 +9,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
 @NoArgsConstructor
 public class Configurator {
+    private UUID id;
     private Product product;
     private List<Rule> rules;
     private PriceStrategy priceStrategy;
 
-    public Configurator(Product product, List<Rule> rules, PriceStrategy priceStrategy) {
+    public Configurator(UUID id, Product product, List<Rule> rules, PriceStrategy priceStrategy) {
+        this.id = id;
         this.product = product;
         this.rules = rules;
         this.priceStrategy = priceStrategy;

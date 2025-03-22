@@ -16,7 +16,8 @@ public class Configuration {
     protected Product product;
     protected Map<Part, PartOption> selectedOptions;
 
-    public Configuration(Product product, Map<Part, PartOption> selectedOptions) {
+    public Configuration(UUID id, Product product, Map<Part, PartOption> selectedOptions) {
+        this.id = id;
         this.product = product;
         this.selectedOptions = selectedOptions;
     }
@@ -31,5 +32,13 @@ public class Configuration {
         return selectedOptions.values().stream()
                 .flatMap(o -> o.getConditionalPrices().stream())
                 .toList();
+    }
+
+    public boolean isValid() {
+        return product.getConfigurator().isValid(this);
+    }
+
+    public float calculatePrice() {
+        return product.getConfigurator().calculatePrice(this);
     }
 }
