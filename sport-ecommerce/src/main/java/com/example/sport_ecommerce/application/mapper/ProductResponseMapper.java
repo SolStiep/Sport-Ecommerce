@@ -6,38 +6,18 @@ import com.example.sport_ecommerce.application.model.response.ProductResponse;
 import com.example.sport_ecommerce.domain.model.Part;
 import com.example.sport_ecommerce.domain.model.PartOption;
 import com.example.sport_ecommerce.domain.model.Product;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ProductResponseMapper {
-    public ProductResponse toResponse(Product product) {
-        return ProductResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .categoryId(product.getCategory().getId())
-                .parts(product.getParts().stream()
-                        .map(this::toPartResponse)
-                        .toList())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface ProductResponseMapper {
 
-    private PartResponse toPartResponse(Part part) {
-        return PartResponse.builder()
-                .id(part.getId())
-                .name(part.getName())
-                .options(part.getOptions().stream()
-                        .map(this::toPartOptionResponse)
-                        .toList())
-                .build();
-    }
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
+    ProductResponse toResponse(Product product);
 
-    private PartOptionResponse toPartOptionResponse(PartOption option) {
-        return PartOptionResponse.builder()
-                .id(option.getId())
-                .name(option.getName())
-                .price(option.getPrice())
-                .inStock(option.isInStock())
-                .build();
-    }
+    PartResponse toPartResponse(Part part);
+
+    PartOptionResponse toPartOptionResponse(PartOption option);
 }
+
