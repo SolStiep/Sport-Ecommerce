@@ -16,7 +16,8 @@ public class Part {
     private Product product;
     private List<PartOption> options;
 
-    public Part(String name, Product product, List<PartOption> options) {
+    public Part(UUID id, String name, Product product, List<PartOption> options) {
+        this.id = id;
         this.name = name;
         this.product = product;
         this.options = options;
