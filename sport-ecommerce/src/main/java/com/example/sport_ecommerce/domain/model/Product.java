@@ -27,4 +27,15 @@ public class Product {
         this.parts = parts;
         this.configurator = configurator;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parts=" + parts +
+                ", configurator=" + configurator +
+                '}';
+    }
+
 }
