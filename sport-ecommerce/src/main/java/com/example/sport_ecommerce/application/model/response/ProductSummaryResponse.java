@@ -10,12 +10,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductResponse {
+public class ProductSummaryResponse {
     private UUID id;
     private String name;
     private String description;
     private UUID categoryId;
     private String categoryName;
     private List<PartResponse> parts;
-    private ConfiguratorResponse configurator;
 }
