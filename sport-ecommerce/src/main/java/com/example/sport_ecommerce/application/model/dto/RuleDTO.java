@@ -1,24 +1,28 @@
 package com.example.sport_ecommerce.application.model.dto;
 
-import com.example.sport_ecommerce.domain.model.valueobject.RuleType;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RuleDTO {
-    private RuleType type;
+    private List<RestrictionRuleDTO> restrictionRules;
+    private List<PriceConditionRuleDTO> priceConditionRules;
 
-    // For RestrictionRule
-    private String ifOption;
-    private String operator;
-    private List<String> targetOptions;
+    public RuleDTO() {
+        this.restrictionRules = new ArrayList<>();
+        this.priceConditionRules = new ArrayList<>();
+    }
 
-    // For PriceConditionRule
-    private Map<String, String> requiredOptions;
+    public void addToRestrictionRules(RestrictionRuleDTO restrictionRule) {
+        restrictionRules.add(restrictionRule);
+    }
+
+    public void addToPriceConditionRules(PriceConditionRuleDTO priceRule) {
+        priceConditionRules.add(priceRule);
+    }
 }
