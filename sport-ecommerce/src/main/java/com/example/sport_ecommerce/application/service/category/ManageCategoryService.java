@@ -9,6 +9,7 @@ import com.example.sport_ecommerce.domain.model.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,5 +38,12 @@ public class ManageCategoryService implements ManageCategoryUseCase {
     @Override
     public void delete(UUID categoryId) {
         categoryRepository.deleteById(categoryId);
+    }
+
+    @Override
+    public List<CategoryResponse> getAll() {
+        return categoryRepository.findAll().stream()
+                .map(categoryMapper::toResponse)
+                .toList();
     }
 }
