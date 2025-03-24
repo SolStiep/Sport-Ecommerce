@@ -17,8 +17,10 @@ public interface OrderResponseMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.name", target = "userName")
     @Mapping(source = "items", target = "items")
+    @Mapping(source = "id", target = "orderId")
     OrderDetailResponse toDetail(Order order);
 
+    @Mapping(source = "id", target = "orderId")
     UserOrderSummaryResponse toSummary(Order order);
 
     List<UserOrderSummaryResponse> toSummaryList(List<Order> orders);

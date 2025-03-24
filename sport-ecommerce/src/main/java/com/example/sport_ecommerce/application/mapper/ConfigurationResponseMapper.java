@@ -15,6 +15,8 @@ import java.util.Map;
 @Mapper(componentModel = "spring")
 public interface ConfigurationResponseMapper {
 
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "productName", source = "product.name")
     @Mapping(target = "selectedOptions", source = "selectedOptions", qualifiedByName = "mapSelectedOptions")
     ConfigurationResponse toResponse(Configuration config);
 
