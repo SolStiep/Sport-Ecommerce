@@ -1,0 +1,46 @@
+package com.example.sport_ecommerce.application.service.product;
+
+import com.example.sport_ecommerce.application.model.dto.PriceConditionRuleDTO;
+import com.example.sport_ecommerce.application.model.dto.RestrictionRuleDTO;
+import com.example.sport_ecommerce.application.model.dto.RuleDTO;
+import com.example.sport_ecommerce.domain.model.PartOption;
+import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
+import com.example.sport_ecommerce.domain.model.rule.RestrictionRule;
+import com.example.sport_ecommerce.domain.model.rule.RuleVisitor;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
+
+@Getter
+@Component
+public class RuleDTOVisitor implements RuleVisitor {
+
+    private final RuleDTO ruleDTOs = new RuleDTO();
+
+    @Override
+    public void visit(RestrictionRule restrictionRule) {
+        RestrictionRuleDTO dto = RestrictionRuleDTO.builder()
+                .id(restrictionRule.getId())
+                .ifOption(restrictionRule.getIfOption().getName())
+                .operator(restrictionRule.getOperator().name())
+                .targetOptions(restrictionRule.getTargetOptions().stream()
+                        .map(PartOption::getName)
+                        .collect(Collectors.toList()))
+                .build();
+        ruleDTOs.addToRestrictionRules(dto);
+    }
+
+    @Override
+    public void visit(PriceConditionRule priceConditionRule) {
+        PriceConditionRuleDTO dto = PriceConditionRuleDTO.builder()
+                .id(priceConditionRule.getId())
+                .requiredOptions(priceConditionRule.getRequiredOptions().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                e -> e.getKey().getName(),
+                                e -> e.getValue().getName())))
+                .build();
+        ruleDTOs.addToPriceConditionRules(dto);
+    }
+}
+

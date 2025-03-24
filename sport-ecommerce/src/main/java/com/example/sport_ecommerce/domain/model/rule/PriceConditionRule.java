@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Setter
 @Getter
 @NoArgsConstructor
 public class PriceConditionRule implements Rule {
+    private UUID id;
     private Map<Part, PartOption> requiredOptions;
 
     public PriceConditionRule(Map<Part, PartOption> requiredOptions) {
@@ -20,8 +22,18 @@ public class PriceConditionRule implements Rule {
     }
 
     @Override
+    public void accept(RuleVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
     public boolean isSatisfied(Configuration config) {
         return requiredOptions.entrySet().stream()
                 .allMatch(e -> e.getValue().equals(config.getSelectedOptions().get(e.getKey())));
+    }
+
+    @Override
+    public boolean isValid(Configuration config) {
+        return true;
     }
 }

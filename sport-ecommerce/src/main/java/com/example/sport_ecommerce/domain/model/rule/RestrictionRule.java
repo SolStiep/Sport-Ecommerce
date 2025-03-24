@@ -3,10 +3,18 @@ package com.example.sport_ecommerce.domain.model.rule;
 import com.example.sport_ecommerce.domain.model.Configuration;
 import com.example.sport_ecommerce.domain.model.PartOption;
 import com.example.sport_ecommerce.domain.model.valueobject.RuleOperator;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
+@Setter
+@Getter
+@NoArgsConstructor
 public class RestrictionRule implements Rule {
+    private UUID id;
     private PartOption ifOption;
     private RuleOperator operator;
     private List<PartOption> targetOptions;
@@ -18,6 +26,11 @@ public class RestrictionRule implements Rule {
     }
 
     @Override
+    public void accept(RuleVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
     public boolean isSatisfied(Configuration config) {
         boolean selected = config.getSelectedOptions().containsValue(ifOption);
 
@@ -26,4 +39,10 @@ public class RestrictionRule implements Rule {
             case EXCLUDES -> selected && targetOptions.stream().noneMatch(config.getSelectedOptions().values()::contains);
         };
     }
+
+    @Override
+    public boolean isValid(Configuration config) {
+        return isSatisfied(config);
+    }
+
 }
