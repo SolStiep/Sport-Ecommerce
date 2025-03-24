@@ -4,6 +4,7 @@ import com.example.sport_ecommerce.application.mapper.ProductResponseMapper;
 import com.example.sport_ecommerce.application.model.response.ProductResponse;
 import com.example.sport_ecommerce.application.port.in.product.GetProductDetailUseCase;
 import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
+import com.example.sport_ecommerce.domain.exception.ProductNotFoundException;
 import com.example.sport_ecommerce.domain.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     @Override
     public ProductResponse getProductById(UUID productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found."));
+                .orElseThrow(ProductNotFoundException::new);
         return responseMapper.toResponse(product);
     }
 }

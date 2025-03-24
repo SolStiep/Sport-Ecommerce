@@ -2,8 +2,10 @@ package com.example.sport_ecommerce.application.service.product;
 
 import com.example.sport_ecommerce.application.mapper.ProductCommandMapper;
 import com.example.sport_ecommerce.application.mapper.ProductResponseMapper;
+import com.example.sport_ecommerce.application.mapper.ProductSummaryMapper;
 import com.example.sport_ecommerce.application.model.command.ProductCommand;
 import com.example.sport_ecommerce.application.model.response.ProductResponse;
+import com.example.sport_ecommerce.application.model.response.ProductSummaryResponse;
 import com.example.sport_ecommerce.application.port.in.product.ManageProductUseCase;
 import com.example.sport_ecommerce.application.port.out.CategoryRepositoryPort;
 import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
@@ -21,10 +23,10 @@ public class ManageProductService implements ManageProductUseCase {
     private final ProductRepositoryPort productRepository;
     private final CategoryRepositoryPort categoryRepository;
     private final ProductCommandMapper productMapper;
-    private final ProductResponseMapper responseMapper;
+    private final ProductSummaryMapper responseMapper;
 
     @Override
-    public ProductResponse create(ProductCommand command) {
+    public ProductSummaryResponse create(ProductCommand command) {
         Category category = categoryRepository.findById(command.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
@@ -35,7 +37,7 @@ public class ManageProductService implements ManageProductUseCase {
     }
 
     @Override
-    public ProductResponse update(ProductCommand command) {
+    public ProductSummaryResponse update(ProductCommand command) {
         Category category = categoryRepository.findById(command.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
