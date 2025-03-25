@@ -1,10 +1,8 @@
 package com.example.sport_ecommerce.application.service.product;
 
 import com.example.sport_ecommerce.application.mapper.ProductCommandMapper;
-import com.example.sport_ecommerce.application.mapper.ProductResponseMapper;
 import com.example.sport_ecommerce.application.mapper.ProductSummaryMapper;
 import com.example.sport_ecommerce.application.model.command.ProductCommand;
-import com.example.sport_ecommerce.application.model.response.ProductResponse;
 import com.example.sport_ecommerce.application.model.response.ProductSummaryResponse;
 import com.example.sport_ecommerce.application.port.in.product.ManageProductUseCase;
 import com.example.sport_ecommerce.application.port.out.CategoryRepositoryPort;
@@ -32,7 +30,6 @@ public class ManageProductService implements ManageProductUseCase {
 
         Product product = productMapper.toDomain(command, category);
         Product saved = productRepository.save(product);
-
         return responseMapper.toResponse(saved);
     }
 
