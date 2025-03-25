@@ -23,6 +23,13 @@ public class Configurator {
     private PriceStrategy priceStrategy;
     private PriceStrategyType priceStrategyType;
 
+    public Configurator(Product product, List<Rule> rules, PriceStrategyType priceStrategyType) {
+        this.product = product;
+        this.rules = rules;
+        this.priceStrategyType = priceStrategyType;
+        this.priceStrategy = setStrategy(priceStrategyType);
+    }
+
     public Configurator(UUID id, Product product, List<Rule> rules, PriceStrategyType priceStrategyType) {
         this.id = id;
         this.product = product;

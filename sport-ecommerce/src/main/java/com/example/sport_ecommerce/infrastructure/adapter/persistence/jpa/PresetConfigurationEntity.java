@@ -15,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class PresetConfigurationEntity {
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String name;

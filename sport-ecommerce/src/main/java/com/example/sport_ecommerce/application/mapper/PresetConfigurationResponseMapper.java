@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface PresetConfigurationResponseMapper {
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "product.id", target = "productId")
     @Mapping(source = "product.name", target = "productName")
     @Mapping(source = "selectedOptions", target = "selectedOptions", qualifiedByName = "mapSelectedOptions")

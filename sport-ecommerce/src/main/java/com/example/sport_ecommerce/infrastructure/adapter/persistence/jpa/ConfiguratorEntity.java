@@ -16,6 +16,7 @@ import java.util.UUID;
 @Builder
 public class ConfiguratorEntity {
     @Id
+    @GeneratedValue
     private UUID id;
 
     @OneToOne

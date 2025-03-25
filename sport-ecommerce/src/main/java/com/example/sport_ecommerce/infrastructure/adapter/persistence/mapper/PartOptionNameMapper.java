@@ -18,7 +18,7 @@ public class PartOptionNameMapper {
     @Named("fromName")
     public PartOption fromName(String name) {
         if (name == null) return null;
-        return new PartOption(UUID.randomUUID(), name, 0f, true, List.of());
+        return new PartOption(name, 0f, true, List.of());
     }
 
     @Named("toNames")

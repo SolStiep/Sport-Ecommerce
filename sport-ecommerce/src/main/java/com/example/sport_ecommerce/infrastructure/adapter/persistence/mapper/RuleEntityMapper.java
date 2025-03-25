@@ -46,8 +46,8 @@ public interface RuleEntityMapper {
         if (map == null) return Map.of();
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
-                        e -> new Part(null, e.getKey(), null, null),
-                        e -> new PartOption(null, e.getValue(), 0f, true, List.of())
+                        e -> new Part(e.getKey(), null, null),
+                        e -> new PartOption(e.getValue(), 0f, true, List.of())
                 ));
     }
 }

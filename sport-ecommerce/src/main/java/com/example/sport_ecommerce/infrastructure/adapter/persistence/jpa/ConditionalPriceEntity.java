@@ -1,5 +1,6 @@
 package com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa;
 
+import com.example.sport_ecommerce.domain.model.rule.Rule;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class ConditionalPriceEntity {
     @Id
+    @GeneratedValue
     private UUID id;
 
     private float price;

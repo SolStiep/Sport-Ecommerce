@@ -34,7 +34,7 @@ public class ConfigurationMapper {
             selected.put(part, option);
         });
 
-        return new Configuration(UUID.randomUUID(), product, selected);
+        return new Configuration(product, selected);
     }
 
     public List<Configuration> toDomainList(List<ConfigurationDTO> dtos) {

@@ -10,4 +10,6 @@ public interface Rule {
     void accept(RuleVisitor visitor);
 
     UUID getId();
+
+    void setId(UUID id);
 }

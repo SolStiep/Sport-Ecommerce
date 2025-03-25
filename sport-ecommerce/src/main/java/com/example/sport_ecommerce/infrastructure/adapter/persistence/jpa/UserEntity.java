@@ -14,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UserEntity {
-
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String name;

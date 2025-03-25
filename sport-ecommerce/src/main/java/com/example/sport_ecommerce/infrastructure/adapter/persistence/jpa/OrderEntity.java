@@ -14,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class OrderEntity {
-
     @Id
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

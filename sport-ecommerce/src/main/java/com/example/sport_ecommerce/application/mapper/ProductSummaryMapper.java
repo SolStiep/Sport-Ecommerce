@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ProductSummaryMapper {
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
     ProductSummaryResponse toResponse(Product product);
@@ -32,13 +33,11 @@ public interface ProductSummaryMapper {
         if (domainList == null) return List.of();
 
         return domainList.stream()
-                .map(cp -> {
-                    Rule rule = cp.getCondition();
-                    return ConditionalPriceResponse.builder()
-                            .ruleId(rule.getId())
-                            .price(cp.getPrice())
-                            .build();
-                })
+                .filter(cp -> cp.getCondition() != null && cp.getCondition().getId() != null)
+                .map(cp -> ConditionalPriceResponse.builder()
+                        .ruleId(cp.getCondition().getId())
+                        .price(cp.getPrice())
+                        .build())
                 .toList();
     }
 

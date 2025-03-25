@@ -19,6 +19,14 @@ public class Product {
     private List<Part> parts;
     private Configurator configurator;
 
+    public Product(String name, String description, Category category, List<Part> parts, Configurator configurator) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.parts = parts;
+        this.configurator = configurator;
+    }
+
     public Product(UUID id, String name, String description, Category category, List<Part> parts, Configurator configurator) {
         this.id = id;
         this.name = name;

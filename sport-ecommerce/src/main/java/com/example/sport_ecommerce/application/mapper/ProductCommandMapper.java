@@ -18,13 +18,11 @@ import static com.example.sport_ecommerce.application.utils.ProductStructureUtil
 @Component
 public class ProductCommandMapper {
     public Product toDomain(ProductCommand command, Category category) {
-        UUID productId = UUID.randomUUID();
         List<Part> parts = command.getParts().stream()
                 .map(this::mapPart)
                 .toList();
 
         Product product = new Product(
-                productId,
                 command.getName(),
                 command.getDescription(),
                 category,
@@ -33,6 +31,14 @@ public class ProductCommandMapper {
         );
 
         parts.forEach(p -> p.setProduct(product));
+
+        Map<PriceConditionRuleDTO, PriceConditionRule> ruleMap = new HashMap<>();
+
+        List<Rule> rules = mapRulesAndStorePriceRules(command.getConfigurator().getRules(), parts, ruleMap);
+
+        Configurator configurator = new Configurator(product, rules, command.getConfigurator().getPriceStrategyType());
+        configurator.setProduct(product);
+        product.setConfigurator(configurator);
 
         for (int i = 0; i < parts.size(); i++) {
             Part part = parts.get(i);
@@ -44,20 +50,18 @@ public class ProductCommandMapper {
 
                 if (optionDTO.getConditionalPrices() != null) {
                     List<ConditionalPrice> condPrices = optionDTO.getConditionalPrices().stream()
-                            .map(cpDTO -> new ConditionalPrice(
-                                    mapPriceConditionRule(cpDTO.getRule(), parts),
-                                    cpDTO.getPrice()
-                            )).toList();
+                            .map(cpDTO -> {
+                                PriceConditionRule rule = ruleMap.get(cpDTO.getRule());
+                                if (rule == null) {
+                                    throw new RuntimeException("No corresponding rule was found for: " + cpDTO.getRule());
+                                }
+                                return new ConditionalPrice(rule, cpDTO.getPrice());
+                            })
+                            .toList();
                     option.setConditionalPrices(condPrices);
                 }
             }
         }
-
-        List<Rule> rules = mapRules(command.getConfigurator().getRules(), parts);
-
-        Configurator configurator = new Configurator(UUID.randomUUID(), product, rules, command.getConfigurator().getPriceStrategyType());
-        configurator.setProduct(product);
-        product.setConfigurator(configurator);
 
         return product;
     }
@@ -68,7 +72,6 @@ public class ProductCommandMapper {
                 .toList();
 
         return new Part(
-                UUID.randomUUID(),
                 partDTO.getName(),
                 null,
                 options
@@ -77,7 +80,6 @@ public class ProductCommandMapper {
 
     private PartOption mapPartOption(PartOptionDTO dto) {
         return new PartOption(
-                UUID.randomUUID(),
                 dto.getName(),
                 dto.getPrice(),
                 dto.isInStock(),
@@ -85,14 +87,19 @@ public class ProductCommandMapper {
         );
     }
 
-    private List<Rule> mapRules(RuleDTO ruleDTOs, List<Part> parts) {
+    private List<Rule> mapRulesAndStorePriceRules(RuleDTO ruleDTOs, List<Part> parts, Map<PriceConditionRuleDTO, PriceConditionRule> priceRuleMap) {
         List<Rule> rules = new ArrayList<>();
-        for (RestrictionRuleDTO restrictionRuleDTO: ruleDTOs.getRestrictionRules()) {
+
+        for (RestrictionRuleDTO restrictionRuleDTO : ruleDTOs.getRestrictionRules()) {
             rules.add(mapRestrictionRule(restrictionRuleDTO, parts));
         }
-        for (PriceConditionRuleDTO priceConditionRuleDTO: ruleDTOs.getPriceConditionRules()) {
-            rules.add(mapPriceConditionRule(priceConditionRuleDTO, parts));
+
+        for (PriceConditionRuleDTO priceConditionRuleDTO : ruleDTOs.getPriceConditionRules()) {
+            PriceConditionRule rule = mapPriceConditionRule(priceConditionRuleDTO, parts);
+            priceRuleMap.put(priceConditionRuleDTO, rule);
+            rules.add(rule);
         }
+
         return rules;
     }
 
@@ -101,6 +108,7 @@ public class ProductCommandMapper {
         List<PartOption> targets = dto.getTargetOptions().stream()
                 .map(name -> findOptionByName(parts, name))
                 .toList();
+
         return new RestrictionRule(ifOption, RuleOperator.valueOf(dto.getOperator()), targets);
     }
 
@@ -111,6 +119,7 @@ public class ProductCommandMapper {
             PartOption option = findOptionByName(List.of(part), optionName);
             requiredOptions.put(part, option);
         });
+
         return new PriceConditionRule(requiredOptions);
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = ProductSummaryMapper.class)
 public interface ProductResponseMapper {
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
     @Mapping(target = "configurator", expression = "java(mapConfiguratorToResponse(product))")

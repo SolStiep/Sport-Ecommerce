@@ -15,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class PartEntity {
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String name;
