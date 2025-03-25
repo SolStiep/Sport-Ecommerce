@@ -21,7 +21,6 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     @Override
     public Product save(Product product) {
         ProductEntity entity = mapper.toEntity(product);
-        System.out.println("Rules before save: " + product.getConfigurator().getRules().size());
         ProductEntity saved = jpaRepository.save(entity);
         return mapper.toDomain(saved);
     }
