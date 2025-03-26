@@ -32,7 +32,9 @@ public class PriceConditionRule implements Rule {
         boolean ifOptionSelected = config.getSelectedOptions().values().stream()
                 .anyMatch(opt -> opt.getId().equals(ifOption.getId()));
 
-        return ifOptionSelected && requiredOptions.stream()
+        if (!ifOptionSelected) return true;
+
+        return requiredOptions.stream()
                 .anyMatch(required -> config.getSelectedOptions().values().stream()
                         .anyMatch(opt -> opt.getId().equals(required.getId())));
     }

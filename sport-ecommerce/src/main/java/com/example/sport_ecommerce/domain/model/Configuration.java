@@ -15,12 +15,6 @@ public class Configuration {
     protected Product product;
     protected Map<Part, PartOption> selectedOptions;
 
-    public Configuration(UUID id, Product product, Map<Part, PartOption> selectedOptions) {
-        this.id = id;
-        this.product = product;
-        this.selectedOptions = selectedOptions;
-    }
-
     public Configuration(Product product, Map<Part, PartOption> selectedOptions) {
         this.product = product;
         this.selectedOptions = selectedOptions;

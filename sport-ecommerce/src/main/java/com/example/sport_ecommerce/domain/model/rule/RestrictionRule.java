@@ -32,16 +32,19 @@ public class RestrictionRule implements Rule {
 
     @Override
     public boolean isSatisfied(Configuration config) {
-        boolean selected = config.getSelectedOptions().values().stream()
+        boolean ifOptionSelected = config.getSelectedOptions().values().stream()
                 .anyMatch(opt -> opt.getId().equals(ifOption.getId()));
+        if (!ifOptionSelected) {
+            return true;
+        }
 
         return switch (operator) {
-            case REQUIRES -> selected &&
+            case REQUIRES ->
                     targetOptions.stream().allMatch(target ->
                             config.getSelectedOptions().values().stream()
                                     .anyMatch(opt -> opt.getId().equals(target.getId()))
                     );
-            case EXCLUDES -> selected &&
+            case EXCLUDES ->
                     targetOptions.stream().noneMatch(target ->
                             config.getSelectedOptions().values().stream()
                                     .anyMatch(opt -> opt.getId().equals(target.getId()))

@@ -7,8 +7,7 @@ import com.example.sport_ecommerce.application.model.response.ProductSummaryResp
 import com.example.sport_ecommerce.application.port.in.product.ManageProductUseCase;
 import com.example.sport_ecommerce.application.port.out.CategoryRepositoryPort;
 import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
-import com.example.sport_ecommerce.domain.model.Category;
-import com.example.sport_ecommerce.domain.model.Product;
+import com.example.sport_ecommerce.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
