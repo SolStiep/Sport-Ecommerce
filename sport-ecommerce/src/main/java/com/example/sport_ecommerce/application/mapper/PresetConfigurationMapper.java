@@ -39,7 +39,6 @@ public class PresetConfigurationMapper {
         });
 
         PresetConfiguration preset = new PresetConfiguration(
-                UUID.randomUUID(),
                 product,
                 selected,
                 command.getName(),

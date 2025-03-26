@@ -12,5 +12,5 @@ import java.util.UUID;
 @Builder
 public class ConfigurationDTO {
     private UUID productId;
-    private Map<String, String> selectedOptions;
+    private Map<UUID, UUID> selectedOptions;
 }

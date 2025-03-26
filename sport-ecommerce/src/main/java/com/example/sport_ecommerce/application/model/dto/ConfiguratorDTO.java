@@ -1,8 +1,7 @@
 package com.example.sport_ecommerce.application.model.dto;
 
+import com.example.sport_ecommerce.domain.model.valueobject.PriceStrategyType;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -10,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ConfiguratorDTO {
-    private List<RuleDTO> rules;
-    private String priceStrategy;
+    private CreateRuleDTO rules;
+    private PriceStrategyType priceStrategyType;
 }

@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findOptionByName;
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findPartByName;
 
 @Component
 @RequiredArgsConstructor
@@ -28,13 +24,21 @@ public class ConfigurationMapper {
 
         Map<Part, PartOption> selected = new HashMap<>();
 
-        dto.getSelectedOptions().forEach((partName, optionName) -> {
-            Part part = findPartByName(product.getParts(), partName);
-            PartOption option = findOptionByName(product.getParts(), optionName);
+        dto.getSelectedOptions().forEach((partId, optionId) -> {
+            Part part = product.getParts().stream()
+                    .filter(p -> p.getId().equals(partId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Part not found: " + partId));
+
+            PartOption option = part.getOptions().stream()
+                    .filter(o -> o.getId().equals(optionId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Option not found for part " + partId + ": " + optionId));
+
             selected.put(part, option);
         });
 
-        return new Configuration(UUID.randomUUID(), product, selected);
+        return new Configuration(product, selected);
     }
 
     public List<Configuration> toDomainList(List<ConfigurationDTO> dtos) {

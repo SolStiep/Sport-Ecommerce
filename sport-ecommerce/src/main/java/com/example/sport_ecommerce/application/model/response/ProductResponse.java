@@ -17,4 +17,5 @@ public class ProductResponse {
     private UUID categoryId;
     private String categoryName;
     private List<PartResponse> parts;
+    private ConfiguratorResponse configurator;
 }

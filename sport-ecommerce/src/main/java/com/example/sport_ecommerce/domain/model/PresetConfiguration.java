@@ -16,8 +16,8 @@ public class PresetConfiguration extends Configuration {
     private Float price;
     private boolean isActive;
 
-    public PresetConfiguration(UUID id, Product product, Map<Part, PartOption> selectedOptions, String name, Float price, boolean isActive) {
-        super(id, product, selectedOptions);
+    public PresetConfiguration(Product product, Map<Part, PartOption> selectedOptions, String name, Float price, boolean isActive) {
+        super(product, selectedOptions);
         this.name = name;
         this.price = price;
         this.isActive = isActive;

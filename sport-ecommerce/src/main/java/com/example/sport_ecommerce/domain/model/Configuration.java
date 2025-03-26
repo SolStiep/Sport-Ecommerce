@@ -1,12 +1,11 @@
 package com.example.sport_ecommerce.domain.model;
 
+import com.example.sport_ecommerce.domain.model.rule.Rule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Setter
 @Getter
@@ -15,9 +14,9 @@ public class Configuration {
     protected UUID id;
     protected Product product;
     protected Map<Part, PartOption> selectedOptions;
+    private final Set<Rule> violationRules = new HashSet<>();
 
-    public Configuration(UUID id, Product product, Map<Part, PartOption> selectedOptions) {
-        this.id = id;
+    public Configuration(Product product, Map<Part, PartOption> selectedOptions) {
         this.product = product;
         this.selectedOptions = selectedOptions;
     }
@@ -28,17 +27,7 @@ public class Configuration {
                 .reduce(0f, Float::sum);
     }
 
-    public List<ConditionalPrice> getApplicableConditionalPrices() {
-        return selectedOptions.values().stream()
-                .flatMap(o -> o.getConditionalPrices().stream())
-                .toList();
-    }
-
-    public boolean isValid() {
-        return product.getConfigurator().isValid(this);
-    }
-
-    public float calculatePrice() {
-        return product.getConfigurator().calculatePrice(this);
+    public void addViolationRules(Rule rule) {
+        violationRules.add(rule);
     }
 }

@@ -17,6 +17,13 @@ public class PartOption {
     private boolean inStock;
     private List<ConditionalPrice> conditionalPrices;
 
+    public PartOption(String name, float price, boolean inStock, List<ConditionalPrice> conditionalPrices) {
+        this.name = name;
+        this.price = price;
+        this.inStock = inStock;
+        this.conditionalPrices = conditionalPrices;
+    }
+
     public PartOption(UUID id, String name, float price, boolean inStock, List<ConditionalPrice> conditionalPrices) {
         this.id = id;
         this.name = name;

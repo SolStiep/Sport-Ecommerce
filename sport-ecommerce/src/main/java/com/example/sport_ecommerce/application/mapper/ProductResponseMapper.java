@@ -1,43 +1,41 @@
 package com.example.sport_ecommerce.application.mapper;
 
-import com.example.sport_ecommerce.application.model.response.PartOptionResponse;
-import com.example.sport_ecommerce.application.model.response.PartResponse;
-import com.example.sport_ecommerce.application.model.response.ProductResponse;
-import com.example.sport_ecommerce.domain.model.Part;
-import com.example.sport_ecommerce.domain.model.PartOption;
+import com.example.sport_ecommerce.application.model.dto.RuleDTO;
+import com.example.sport_ecommerce.application.model.response.*;
+import com.example.sport_ecommerce.application.service.product.RuleDTOVisitor;
 import com.example.sport_ecommerce.domain.model.Product;
-import org.springframework.stereotype.Component;
+import com.example.sport_ecommerce.domain.model.rule.Rule;
+import com.example.sport_ecommerce.domain.model.service.Configurator;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ProductResponseMapper {
-    public ProductResponse toResponse(Product product) {
-        return ProductResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .categoryId(product.getCategory().getId())
-                .parts(product.getParts().stream()
-                        .map(this::toPartResponse)
-                        .toList())
-                .build();
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = ProductSummaryMapper.class)
+public interface ProductResponseMapper {
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "parts", target = "parts")
+    @Mapping(target = "configurator", expression = "java(mapConfiguratorToResponse(product))")
+    ProductResponse toResponse(Product product);
+
+    default ConfiguratorResponse mapConfiguratorToResponse(Product product) {
+        Configurator configurator = product.getConfigurator();
+        if (configurator != null) {
+            return ConfiguratorResponse.builder()
+                    .id(configurator.getId())
+                    .priceStrategyType(configurator.getPriceStrategyType())
+                    .rules(mapRulesToResponse(configurator.getRules()))
+                    .build();
+        }
+        return null;
     }
 
-    private PartResponse toPartResponse(Part part) {
-        return PartResponse.builder()
-                .id(part.getId())
-                .name(part.getName())
-                .options(part.getOptions().stream()
-                        .map(this::toPartOptionResponse)
-                        .toList())
-                .build();
-    }
-
-    private PartOptionResponse toPartOptionResponse(PartOption option) {
-        return PartOptionResponse.builder()
-                .id(option.getId())
-                .name(option.getName())
-                .price(option.getPrice())
-                .inStock(option.isInStock())
-                .build();
+    default RuleDTO mapRulesToResponse(List<Rule> rules) {
+        RuleDTOVisitor ruleVisitor = new RuleDTOVisitor();
+        rules.forEach(rule -> rule.accept(ruleVisitor));
+        return ruleVisitor.getRuleDTOs();
     }
 }
