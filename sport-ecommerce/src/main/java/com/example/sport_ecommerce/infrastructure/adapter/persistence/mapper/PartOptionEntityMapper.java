@@ -17,29 +17,36 @@ public abstract class PartOptionEntityMapper {
     @Autowired
     protected ConditionalPriceEntityMapper conditionalPriceEntityMapper;
 
-    public PartOptionEntity toEntity(PartOption option, PartEntity parentPart, Map<Rule, RuleEntity> ruleEntityMap) {
-        List<ConditionalPriceEntity> condEntities = option.getConditionalPrices().stream()
-                .map(cp -> {
-                    RuleEntity conditionEntity = ruleEntityMap.get(cp.getCondition());
-                    if (conditionEntity == null) {
-                        throw new RuntimeException("Rule not found in map for ConditionalPrice: " + cp);
-                    }
-                    return ConditionalPriceEntity.builder()
-                            .price(cp.getPrice())
-                            .condition((PriceConditionRuleEntity) conditionEntity)
-                            .build();
-                }).toList();
-
-        PartOptionEntity entity = PartOptionEntity.builder()
+    public PartOptionEntity toEntity(PartOption option, PartEntity parentPart, Map<UUID, RuleEntity> ruleEntityMap) {
+        return PartOptionEntity.builder()
                 .name(option.getName())
                 .price(option.getPrice())
                 .inStock(option.isInStock())
-                .conditionalPrices(condEntities)
                 .part(parentPart)
                 .build();
+    }
 
-        condEntities.forEach(cp -> cp.setPartOption(entity));
-        return entity;
+    public void mapConditionalPrices(
+            PartOption option,
+            PartOptionEntity optionEntity,
+            Map<Rule, RuleEntity> ruleEntityMap
+    ) {
+        List<ConditionalPriceEntity> condEntities = option.getConditionalPrices().stream()
+                .map(cp -> {
+                    RuleEntity conditionEntity = ruleEntityMap.get(cp.getCondition());
+                    if (!(conditionEntity instanceof PriceConditionRuleEntity priceEntity)) {
+                        throw new IllegalStateException("Expected PriceConditionRuleEntity but got: " + conditionEntity.getClass().getName());
+                    }
+
+                    return ConditionalPriceEntity.builder()
+                            .price(cp.getPrice())
+                            .condition(priceEntity)
+                            .partOption(optionEntity)
+                            .build();
+                })
+                .toList();
+
+        optionEntity.setConditionalPrices(condEntities);
     }
 
     public PartOption toDomain(PartOptionEntity entity, Map<UUID, Rule> ruleMap) {
