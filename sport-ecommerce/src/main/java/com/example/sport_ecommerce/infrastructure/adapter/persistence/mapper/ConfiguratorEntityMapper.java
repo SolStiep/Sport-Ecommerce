@@ -1,6 +1,6 @@
 package com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper;
 
-import com.example.sport_ecommerce.domain.model.Part;
+import com.example.sport_ecommerce.domain.model.PartOption;
 import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
 import com.example.sport_ecommerce.domain.model.rule.RestrictionRule;
 import com.example.sport_ecommerce.domain.model.rule.Rule;
@@ -8,7 +8,6 @@ import com.example.sport_ecommerce.domain.model.service.Configurator;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.*;
 import lombok.Getter;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -21,33 +20,36 @@ public abstract class ConfiguratorEntityMapper {
     @Autowired
     protected RuleEntityMapper ruleEntityMapper;
 
-    public List<RuleEntity> mapRulesWithSharedEntities(List<Rule> rules, ConfiguratorEntity configurator, Map<Rule, RuleEntity> ruleEntityMap) {
-        return rules.stream().map(rule -> {
-            RuleEntity entity = ruleEntityMap.computeIfAbsent(rule, r -> {
-                if (r instanceof RestrictionRule restrictionRule) {
-                    return ruleEntityMapper.toEntity(restrictionRule);
-                } else if (r instanceof PriceConditionRule priceConditionRule) {
-                    return ruleEntityMapper.toEntity(priceConditionRule);
-                } else {
-                    throw new IllegalArgumentException("Unsupported rule type: " + r.getClass());
-                }
-            });
-            entity.setConfigurator(configurator);
-            return entity;
-        }).toList();
-    }
-
-    public ConfiguratorEntity toEntity(Configurator domain, ProductEntity product, Map<Rule, RuleEntity> ruleEntityMap) {
+    public ConfiguratorEntity toEntity(
+            Configurator domain,
+            ProductEntity product,
+            Map<Rule, RuleEntity> ruleEntityMap,
+            Map<PartOption, PartOptionEntity> optionMap
+    ) {
         ConfiguratorEntity configuratorEntity = ConfiguratorEntity.builder()
                 .product(product)
                 .priceStrategyType(domain.getPriceStrategyType())
                 .build();
 
-        List<RuleEntity> ruleEntities = mapRulesWithSharedEntities(domain.getRules(), configuratorEntity, ruleEntityMap);
-        configuratorEntity.setRules(ruleEntities);
+        List<RuleEntity> ruleEntities = domain.getRules().stream()
+                .map(rule -> {
+                    RuleEntity entity = ruleEntityMap.computeIfAbsent(rule, id -> {
+                        if (rule instanceof RestrictionRule restrictionRule) {
+                            return ruleEntityMapper.toEntity(restrictionRule, optionMap);
+                        } else if (rule instanceof PriceConditionRule priceConditionRule) {
+                            return ruleEntityMapper.toEntity(priceConditionRule, optionMap);
+                        }
+                        throw new IllegalArgumentException("Unsupported rule type: " + rule.getClass());
+                    });
+                    entity.setConfigurator(configuratorEntity);
+                    return entity;
+                })
+                .toList();
 
+        configuratorEntity.setRules(ruleEntities);
         return configuratorEntity;
     }
+
 
     public Configurator toDomain(ConfiguratorEntity entity) {
         List<Rule> rules = entity.getRules().stream()
