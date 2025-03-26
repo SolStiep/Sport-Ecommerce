@@ -9,15 +9,11 @@ public class SimplePriceStrategy implements PriceStrategy {
     @Override
     public float calculatePrice(Configuration config) {
         float basePrice = config.getBasePrice();
-        float conditionalPrice = 0f;
-
-        for (PartOption option : config.getSelectedOptions().values()) {
-            for (ConditionalPrice condPrice : option.getConditionalPrices()) {
-                if (condPrice.getCondition().isSatisfied(config)) {
-                    conditionalPrice += condPrice.getPrice();
-                }
-            }
-        }
+        float conditionalPrice = config.getSelectedOptions().values().stream()
+                .flatMap(option -> option.getConditionalPrices().stream())
+                .filter(cp -> cp.getCondition().isSatisfied(config))
+                .map(ConditionalPrice::getPrice)
+                .reduce(0f, Float::sum);
 
         return basePrice + conditionalPrice;
     }

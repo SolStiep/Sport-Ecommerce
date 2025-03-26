@@ -1,13 +1,12 @@
 package com.example.sport_ecommerce.domain.model.rule;
 
 import com.example.sport_ecommerce.domain.model.Configuration;
-import com.example.sport_ecommerce.domain.model.Part;
 import com.example.sport_ecommerce.domain.model.PartOption;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -15,9 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PriceConditionRule implements Rule {
     private UUID id;
-    private Map<Part, PartOption> requiredOptions;
+    private PartOption ifOption;
+    private List<PartOption> requiredOptions;
 
-    public PriceConditionRule(Map<Part, PartOption> requiredOptions) {
+    public PriceConditionRule(PartOption ifOption, List<PartOption> requiredOptions) {
+        this.ifOption = ifOption;
         this.requiredOptions = requiredOptions;
     }
 
@@ -28,8 +29,12 @@ public class PriceConditionRule implements Rule {
 
     @Override
     public boolean isSatisfied(Configuration config) {
-        return requiredOptions.entrySet().stream()
-                .allMatch(e -> e.getValue().equals(config.getSelectedOptions().get(e.getKey())));
+        boolean ifOptionSelected = config.getSelectedOptions().values().stream()
+                .anyMatch(opt -> opt.getId().equals(ifOption.getId()));
+
+        return ifOptionSelected && requiredOptions.stream()
+                .anyMatch(required -> config.getSelectedOptions().values().stream()
+                        .anyMatch(opt -> opt.getId().equals(required.getId())));
     }
 
     @Override

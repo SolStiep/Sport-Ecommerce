@@ -35,10 +35,10 @@ public class RuleDTOVisitor implements RuleVisitor {
     public void visit(PriceConditionRule priceConditionRule) {
         PriceConditionRuleDTO dto = PriceConditionRuleDTO.builder()
                 .id(priceConditionRule.getId())
-                .requiredOptions(priceConditionRule.getRequiredOptions().entrySet().stream()
-                        .collect(Collectors.toMap(
-                                e -> e.getKey().getName(),
-                                e -> e.getValue().getName())))
+                .ifOption(priceConditionRule.getIfOption().getName())
+                .requiredOptions(priceConditionRule.getRequiredOptions().stream()
+                        .map(PartOption::getName)
+                        .collect(Collectors.toList()))
                 .build();
         ruleDTOs.addToPriceConditionRules(dto);
     }

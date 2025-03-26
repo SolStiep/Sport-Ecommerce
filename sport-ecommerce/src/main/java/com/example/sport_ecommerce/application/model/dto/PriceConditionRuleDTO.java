@@ -2,7 +2,7 @@ package com.example.sport_ecommerce.application.model.dto;
 
 import lombok.*;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -14,5 +14,7 @@ import java.util.UUID;
 public class PriceConditionRuleDTO {
     private UUID id;
     @EqualsAndHashCode.Include
-    private Map<String, String> requiredOptions;
+    private String ifOption;
+    @EqualsAndHashCode.Include
+    private List<String> requiredOptions;
 }
