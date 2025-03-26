@@ -10,12 +10,19 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor
 public class RestrictionRuleEntity extends RuleEntity {
 
-    private String ifOption;
-    private String operator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "if_option_id", nullable = false)
+    private PartOptionEntity ifOption;
 
-    @ElementCollection
-    @CollectionTable(name = "rule_target_options", joinColumns = @JoinColumn(name = "rule_id"))
-    @Column(name = "target_option")
-    private List<String> targetOptions;
+    @ManyToMany
+    @JoinTable(
+            name = "rule_target_options",
+            joinColumns = @JoinColumn(name = "rule_id"),
+            inverseJoinColumns = @JoinColumn(name = "target_option_id")
+    )
+    private List<PartOptionEntity> targetOptions;
+
+    @Column(name = "operator", nullable = false)
+    private String operator;
 }
 
