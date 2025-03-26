@@ -22,10 +22,10 @@ public class RuleDTOVisitor implements RuleVisitor {
     public void visit(RestrictionRule restrictionRule) {
         RestrictionRuleDTO dto = RestrictionRuleDTO.builder()
                 .id(restrictionRule.getId())
-                .ifOption(restrictionRule.getIfOption().getName())
+                .ifOption(restrictionRule.getIfOption().getId())
                 .operator(restrictionRule.getOperator().name())
                 .targetOptions(restrictionRule.getTargetOptions().stream()
-                        .map(PartOption::getName)
+                        .map(PartOption::getId)
                         .collect(Collectors.toList()))
                 .build();
         ruleDTOs.addToRestrictionRules(dto);
@@ -35,9 +35,9 @@ public class RuleDTOVisitor implements RuleVisitor {
     public void visit(PriceConditionRule priceConditionRule) {
         PriceConditionRuleDTO dto = PriceConditionRuleDTO.builder()
                 .id(priceConditionRule.getId())
-                .ifOption(priceConditionRule.getIfOption().getName())
+                .ifOption(priceConditionRule.getIfOption().getId())
                 .requiredOptions(priceConditionRule.getRequiredOptions().stream()
-                        .map(PartOption::getName)
+                        .map(PartOption::getId)
                         .collect(Collectors.toList()))
                 .build();
         ruleDTOs.addToPriceConditionRules(dto);

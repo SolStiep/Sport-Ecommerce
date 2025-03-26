@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findOptionByName;
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findPartByName;
 
 @Component
 @RequiredArgsConstructor

@@ -38,7 +38,7 @@ public class RestrictionRule implements Rule {
             return true;
         }
 
-        return switch (operator) {
+        boolean satisfied = switch (operator) {
             case REQUIRES ->
                     targetOptions.stream().allMatch(target ->
                             config.getSelectedOptions().values().stream()
@@ -50,6 +50,12 @@ public class RestrictionRule implements Rule {
                                     .anyMatch(opt -> opt.getId().equals(target.getId()))
                     );
         };
+
+        if (!satisfied) {
+            config.addViolationRules(this);
+        }
+
+        return satisfied;
     }
 
     @Override

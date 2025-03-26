@@ -23,12 +23,12 @@ public interface ConfigurationResponseMapper {
     List<ConfigurationResponse> toResponseList(List<Configuration> configurations);
 
     @Named("mapSelectedOptions")
-    static List<SelectedOptionResponse> mapSelectedOptions(Map<?, ?> selected) {
+    static List<SelectedOptionResponse> mapSelectedOptions(Map<Part, PartOption> selected) {
         return selected.entrySet().stream()
                 .map(e -> SelectedOptionResponse.builder()
-                        .partName(((Part) e.getKey()).getName())
-                        .optionName(((PartOption) e.getValue()).getName())
-                        .price(((PartOption) e.getValue()).getPrice())
+                        .partId(e.getKey().getId())
+                        .optionId(e.getValue().getId())
+                        .price(e.getValue().getPrice())
                         .build())
                 .toList();
     }

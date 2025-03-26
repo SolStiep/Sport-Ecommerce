@@ -3,6 +3,8 @@ package com.example.sport_ecommerce.application.model.response;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.sport_ecommerce.application.model.dto.PriceConditionRuleDTO;
+import com.example.sport_ecommerce.application.model.dto.RestrictionRuleDTO;
 import lombok.*;
 
 @Getter
@@ -16,5 +18,6 @@ public class PrepareConfigurationResponse {
     private float totalPrice;
     private boolean valid;
     private List<SelectedOptionResponse> selectedOptions;
-    private List<IncompatibleOptionResponse> incompatibleOptions;
+    private List<PriceConditionRuleDTO> priceViolations;
+    private List<RestrictionRuleDTO> restrictionViolations;
 }

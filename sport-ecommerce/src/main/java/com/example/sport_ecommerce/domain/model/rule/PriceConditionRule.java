@@ -34,9 +34,15 @@ public class PriceConditionRule implements Rule {
 
         if (!ifOptionSelected) return true;
 
-        return requiredOptions.stream()
+        boolean satisfied = requiredOptions.stream()
                 .anyMatch(required -> config.getSelectedOptions().values().stream()
                         .anyMatch(opt -> opt.getId().equals(required.getId())));
+
+        if (satisfied) {
+            config.addViolationRules(this);
+        }
+
+        return satisfied;
     }
 
     @Override

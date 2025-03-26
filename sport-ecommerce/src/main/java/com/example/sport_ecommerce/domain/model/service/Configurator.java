@@ -39,7 +39,8 @@ public class Configurator {
     }
 
     public boolean isValid(Configuration config) {
-        return rules.stream().allMatch(rule -> rule.isValid(config));
+        rules.forEach(rule -> rule.isSatisfied(config));
+        return config.getViolationRules().isEmpty();
     }
 
     public float calculatePrice(Configuration config) {

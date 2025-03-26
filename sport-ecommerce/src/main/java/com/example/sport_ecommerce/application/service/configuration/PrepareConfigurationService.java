@@ -10,6 +10,7 @@ import com.example.sport_ecommerce.domain.model.service.Configurator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 public class PrepareConfigurationService implements PrepareConfigurationUseCase {
