@@ -39,7 +39,7 @@ public class Configurator {
     }
 
     public boolean isValid(Configuration config) {
-        rules.forEach(rule -> rule.isSatisfied(config));
+        rules.forEach(rule -> rule.isValid(config));
         return config.getViolationRules().isEmpty();
     }
 

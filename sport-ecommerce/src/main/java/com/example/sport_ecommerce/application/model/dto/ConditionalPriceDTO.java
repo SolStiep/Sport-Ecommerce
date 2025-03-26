@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ConditionalPriceDTO {
-    private PriceConditionRuleDTO rule;
+    private CreatePriceConditionRuleDTO rule;
     private float price;
 }

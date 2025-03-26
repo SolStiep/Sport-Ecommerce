@@ -3,7 +3,6 @@ package com.example.sport_ecommerce.application.model.dto;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,10 +10,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class PriceConditionRuleDTO {
-    private UUID id;
+public class CreatePriceConditionRuleDTO {
     @EqualsAndHashCode.Include
-    private UUID ifOption;
+    private String ifOption;
     @EqualsAndHashCode.Include
-    private List<UUID> requiredOptions;
+    private List<String> requiredOptions;
 }

@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ConfiguratorDTO {
-    private RuleDTO rules;
+    private CreateRuleDTO rules;
     private PriceStrategyType priceStrategyType;
 }

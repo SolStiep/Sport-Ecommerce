@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findOptionByName;
-import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findPartByName;
+import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.*;
 
 @Component
 public class ProductCommandMapper {
@@ -32,7 +31,7 @@ public class ProductCommandMapper {
 
         parts.forEach(p -> p.setProduct(product));
 
-        Map<PriceConditionRuleDTO, PriceConditionRule> ruleMap = new HashMap<>();
+        Map<CreatePriceConditionRuleDTO, PriceConditionRule> ruleMap = new HashMap<>();
 
         List<Rule> rules = mapRulesAndStorePriceRules(command.getConfigurator().getRules(), parts, ruleMap);
 
@@ -78,14 +77,14 @@ public class ProductCommandMapper {
         return new PartOption(dto.getName(), dto.getPrice(), dto.isInStock(), List.of());
     }
 
-    private List<Rule> mapRulesAndStorePriceRules(RuleDTO ruleDTOs, List<Part> parts, Map<PriceConditionRuleDTO, PriceConditionRule> priceRuleMap) {
+    private List<Rule> mapRulesAndStorePriceRules(CreateRuleDTO ruleDTOs, List<Part> parts, Map<CreatePriceConditionRuleDTO, PriceConditionRule> priceRuleMap) {
         List<Rule> rules = new ArrayList<>();
 
-        for (RestrictionRuleDTO restrictionRuleDTO : ruleDTOs.getRestrictionRules()) {
+        for (CreateRestrictionRuleDTO restrictionRuleDTO : ruleDTOs.getRestrictionRules()) {
             rules.add(mapRestrictionRule(restrictionRuleDTO, parts));
         }
 
-        for (PriceConditionRuleDTO priceConditionRuleDTO : ruleDTOs.getPriceConditionRules()) {
+        for (CreatePriceConditionRuleDTO priceConditionRuleDTO : ruleDTOs.getPriceConditionRules()) {
             PriceConditionRule rule = mapPriceConditionRule(priceConditionRuleDTO, parts);
             priceRuleMap.put(priceConditionRuleDTO, rule);
             rules.add(rule);
@@ -94,7 +93,7 @@ public class ProductCommandMapper {
         return rules;
     }
 
-    private RestrictionRule mapRestrictionRule(RestrictionRuleDTO dto, List<Part> parts) {
+    private RestrictionRule mapRestrictionRule(CreateRestrictionRuleDTO dto, List<Part> parts) {
         PartOption ifOption = findOptionByName(parts, dto.getIfOption());
         List<PartOption> targets = dto.getTargetOptions().stream()
                 .map(name -> findOptionByName(parts, name))
@@ -103,7 +102,7 @@ public class ProductCommandMapper {
         return new RestrictionRule(ifOption, RuleOperator.valueOf(dto.getOperator()), targets);
     }
 
-    private PriceConditionRule mapPriceConditionRule(PriceConditionRuleDTO dto, List<Part> parts) {
+    private PriceConditionRule mapPriceConditionRule(CreatePriceConditionRuleDTO dto, List<Part> parts) {
         PartOption ifOption = findOptionByName(parts, dto.getIfOption());
         List<PartOption> requiredOptions = dto.getRequiredOptions().stream()
                 .map(name -> findOptionByName(parts, name))
