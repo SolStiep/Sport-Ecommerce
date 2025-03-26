@@ -26,11 +26,14 @@ public interface ProductSummaryMapper {
 
     PartResponse toPartResponse(Part part);
 
-    @Mapping(target = "conditionalPrices", source = "conditionalPrices")
+    @Mapping(target = "conditionalPrices", source = "conditionalPrices", qualifiedByName = "mapConditionalPrices")
     PartOptionResponse toPartOptionResponse(PartOption option);
 
+    @Named("mapConditionalPrices")
     default List<ConditionalPriceResponse> mapConditionalPrices(List<ConditionalPrice> domainList) {
-        if (domainList == null) return List.of();
+        if (domainList == null || domainList.isEmpty()) {
+            return List.of();
+        }
 
         return domainList.stream()
                 .filter(cp -> cp.getCondition() != null && cp.getCondition().getId() != null)

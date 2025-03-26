@@ -17,6 +17,7 @@ public interface ProductResponseMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "parts", target = "parts")
     @Mapping(target = "configurator", expression = "java(mapConfiguratorToResponse(product))")
     ProductResponse toResponse(Product product);
 

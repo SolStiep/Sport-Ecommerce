@@ -71,20 +71,11 @@ public class ProductCommandMapper {
                 .map(this::mapPartOption)
                 .toList();
 
-        return new Part(
-                partDTO.getName(),
-                null,
-                options
-        );
+        return new Part(partDTO.getName(), null, options);
     }
 
     private PartOption mapPartOption(PartOptionDTO dto) {
-        return new PartOption(
-                dto.getName(),
-                dto.getPrice(),
-                dto.isInStock(),
-                List.of()
-        );
+        return new PartOption(dto.getName(), dto.getPrice(), dto.isInStock(), List.of());
     }
 
     private List<Rule> mapRulesAndStorePriceRules(RuleDTO ruleDTOs, List<Part> parts, Map<PriceConditionRuleDTO, PriceConditionRule> priceRuleMap) {
@@ -113,13 +104,12 @@ public class ProductCommandMapper {
     }
 
     private PriceConditionRule mapPriceConditionRule(PriceConditionRuleDTO dto, List<Part> parts) {
-        Map<Part, PartOption> requiredOptions = new HashMap<>();
-        dto.getRequiredOptions().forEach((partName, optionName) -> {
-            Part part = findPartByName(parts, partName);
-            PartOption option = findOptionByName(List.of(part), optionName);
-            requiredOptions.put(part, option);
-        });
+        PartOption ifOption = findOptionByName(parts, dto.getIfOption());
+        List<PartOption> requiredOptions = dto.getRequiredOptions().stream()
+                .map(name -> findOptionByName(parts, name))
+                .toList();
 
-        return new PriceConditionRule(requiredOptions);
+        return new PriceConditionRule(ifOption, requiredOptions);
     }
+
 }
