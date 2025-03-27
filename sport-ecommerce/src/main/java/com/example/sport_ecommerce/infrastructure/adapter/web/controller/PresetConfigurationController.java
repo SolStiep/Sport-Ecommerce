@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +25,21 @@ public class PresetConfigurationController {
     private final GetPresetConfigurationsUseCase getUseCase;
     private final PresetConfigurationResponseMapper responseMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PresetConfigurationResponse> create(@RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration created = manageUseCase.create(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMapper.toResponse(created));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PresetConfigurationResponse> update(@PathVariable UUID id, @RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration updated = manageUseCase.update(id, command);
         return ResponseEntity.ok(responseMapper.toResponse(updated));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         manageUseCase.delete(id);

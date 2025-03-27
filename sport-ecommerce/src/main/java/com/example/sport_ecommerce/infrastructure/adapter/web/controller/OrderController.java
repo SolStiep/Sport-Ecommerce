@@ -1,6 +1,5 @@
 package com.example.sport_ecommerce.infrastructure.adapter.web.controller;
 
-import com.example.sport_ecommerce.application.mapper.OrderResponseMapper;
 import com.example.sport_ecommerce.application.model.command.CreateOrderCommand;
 import com.example.sport_ecommerce.application.model.response.OrderDetailResponse;
 import com.example.sport_ecommerce.application.model.response.UserOrderSummaryResponse;
@@ -24,7 +23,6 @@ public class OrderController {
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderDetailUseCase getOrderDetailUseCase;
     private final GetUserOrdersUseCase getUserOrdersUseCase;
-    private final OrderResponseMapper orderResponseMapper;
 
     @PostMapping
     public ResponseEntity<OrderDetailResponse> createOrder(@RequestBody @Valid CreateOrderCommand command) {

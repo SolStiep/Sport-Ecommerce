@@ -9,6 +9,7 @@ import com.example.sport_ecommerce.application.port.in.product.ManageProductUseC
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -24,6 +25,7 @@ public class ProductController {
     private final GetProductCatalogUseCase getProductCatalogUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductSummaryResponse> createProduct(@RequestBody @Valid ProductCommand command) {
         ProductSummaryResponse response = manageProductUseCase.create(command);
@@ -41,10 +43,10 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         manageProductUseCase.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
-
