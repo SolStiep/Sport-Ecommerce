@@ -30,6 +30,13 @@ public class PresetConfigurationRepositoryAdapter implements PresetConfiguration
     }
 
     @Override
+    public List<PresetConfiguration> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(this::mapBackWithProduct)
+                .toList();
+    }
+
+    @Override
     public PresetConfiguration save(PresetConfiguration preset) {
         PresetConfigurationEntity entity = mapper.toEntity(preset);
         entity.setProduct(ProductEntity.builder().id(preset.getProduct().getId()).build());

@@ -1,6 +1,7 @@
 package com.example.sport_ecommerce.application.service.configuration;
 
 import com.example.sport_ecommerce.application.mapper.PresetConfigurationResponseMapper;
+import com.example.sport_ecommerce.application.model.response.PresetCatalogResponse;
 import com.example.sport_ecommerce.application.model.response.PresetConfigurationResponse;
 import com.example.sport_ecommerce.application.port.in.configuration.GetPresetConfigurationsUseCase;
 import com.example.sport_ecommerce.application.port.out.PresetConfigurationRepositoryPort;
@@ -21,6 +22,12 @@ public class GetPresetConfigurationsService implements GetPresetConfigurationsUs
     @Override
     public List<PresetConfigurationResponse> getPresetsByProduct(UUID productId) {
         List<PresetConfiguration> presets = presetRepository.findByProductId(productId);
-        return responseMapper.toResponseList(presets);
+        return responseMapper.toConfigurationResponseList(presets);
+    }
+
+    @Override
+    public List<PresetCatalogResponse> getAllPresets() {
+        List<PresetConfiguration> presets = presetRepository.findAll();
+        return responseMapper.toCatalogResponseList(presets);
     }
 }

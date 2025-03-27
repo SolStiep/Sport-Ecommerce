@@ -2,6 +2,7 @@ package com.example.sport_ecommerce.infrastructure.adapter.web.controller;
 
 import com.example.sport_ecommerce.application.mapper.PresetConfigurationResponseMapper;
 import com.example.sport_ecommerce.application.model.command.CreatePresetConfigurationCommand;
+import com.example.sport_ecommerce.application.model.response.PresetCatalogResponse;
 import com.example.sport_ecommerce.application.model.response.PresetConfigurationResponse;
 import com.example.sport_ecommerce.application.port.in.configuration.GetPresetConfigurationsUseCase;
 import com.example.sport_ecommerce.application.port.in.configuration.ManagePresetConfigurationUseCase;
@@ -29,14 +30,14 @@ public class PresetConfigurationController {
     @PostMapping
     public ResponseEntity<PresetConfigurationResponse> create(@RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration created = manageUseCase.create(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMapper.toResponse(created));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMapper.toConfigurationResponse(created));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PresetConfigurationResponse> update(@PathVariable UUID id, @RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration updated = manageUseCase.update(id, command);
-        return ResponseEntity.ok(responseMapper.toResponse(updated));
+        return ResponseEntity.ok(responseMapper.toConfigurationResponse(updated));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -50,5 +51,9 @@ public class PresetConfigurationController {
     public ResponseEntity<List<PresetConfigurationResponse>> getByProduct(@PathVariable UUID productId) {
         return ResponseEntity.ok(getUseCase.getPresetsByProduct(productId));
     }
-}
 
+    @GetMapping("/catalog")
+    public ResponseEntity<List<PresetCatalogResponse>> getAllPresetsWithProductAndCategory() {
+        return ResponseEntity.ok(getUseCase.getAllPresets());
+    }
+}

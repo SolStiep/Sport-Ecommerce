@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface PresetConfigurationRepositoryPort {
     List<PresetConfiguration> findByProductId(UUID productId);
+    List<PresetConfiguration> findAll();
     PresetConfiguration save(PresetConfiguration preset);
     Optional<PresetConfiguration> findById(UUID id);
     void deleteById(UUID id);
