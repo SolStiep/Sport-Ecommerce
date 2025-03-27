@@ -1,5 +1,6 @@
 package com.example.sport_ecommerce.application.service.user;
 
+import com.example.sport_ecommerce.application.model.dto.LoginResponse;
 import com.example.sport_ecommerce.application.port.in.user.AuthenticateUserUseCase;
 import com.example.sport_ecommerce.application.port.in.user.RegisterUserUseCase;
 import com.example.sport_ecommerce.application.port.out.UserRepositoryPort;
@@ -19,7 +20,6 @@ public class AuthenticationService implements AuthenticateUserUseCase, RegisterU
 
     private final UserRepositoryPort userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
 
     @Override
     public void register(String name, String email, String password) {
@@ -33,7 +33,7 @@ public class AuthenticationService implements AuthenticateUserUseCase, RegisterU
     }
 
     @Override
-    public String authenticate(String email, String password) {
+    public LoginResponse authenticate(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -41,13 +41,11 @@ public class AuthenticationService implements AuthenticateUserUseCase, RegisterU
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtService.generateToken(
-                new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
-                )
-        );
+        return LoginResponse.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
     }
 }
 
