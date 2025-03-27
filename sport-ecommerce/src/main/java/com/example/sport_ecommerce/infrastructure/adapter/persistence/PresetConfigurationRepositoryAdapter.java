@@ -10,6 +10,7 @@ import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.Preset
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.ProductEntity;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.PresetConfigurationEntityMapper;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.repository.PresetConfigurationJpaRepository;
+import com.example.sport_ecommerce.infrastructure.adapter.persistence.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.*;
 public class PresetConfigurationRepositoryAdapter implements PresetConfigurationRepositoryPort {
 
     private final PresetConfigurationJpaRepository jpaRepository;
+    private final ProductJpaRepository productJpaRepository;
     private final PresetConfigurationEntityMapper mapper;
     private final ProductRepositoryPort productRepository;
 
@@ -32,14 +34,17 @@ public class PresetConfigurationRepositoryAdapter implements PresetConfiguration
     @Override
     public List<PresetConfiguration> findAll() {
         return jpaRepository.findAll().stream()
+                .peek(entity -> System.out.println("Preset ID: " + entity.getId() + ", Product ID: " + entity.getProduct().getId()))
                 .map(this::mapBackWithProduct)
                 .toList();
     }
 
     @Override
     public PresetConfiguration save(PresetConfiguration preset) {
+        ProductEntity fullProduct = productJpaRepository.findById(preset.getProduct().getId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
         PresetConfigurationEntity entity = mapper.toEntity(preset);
-        entity.setProduct(ProductEntity.builder().id(preset.getProduct().getId()).build());
+        entity.setProduct(fullProduct);
         PresetConfigurationEntity saved = jpaRepository.save(entity);
         return mapBackWithProduct(saved);
     }
