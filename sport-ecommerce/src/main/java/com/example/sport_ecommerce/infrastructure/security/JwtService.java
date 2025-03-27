@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +26,6 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public List<String> extractRoles(String token) {
-        var key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return claims.get("roles", List.class);
-    }
-
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -39,7 +34,9 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .claim("roles", userDetails.getAuthorities())
+                .claim("roles", userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -48,7 +45,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         try {
-            var key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+            var key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {

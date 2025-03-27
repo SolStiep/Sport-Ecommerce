@@ -34,8 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = extractTokenFromCookie(request);
         if (token != null && jwtService.isTokenValid(token)) {
             String username = jwtService.extractUsername(token);
-            List<String> roles = jwtService.extractRoles(token);
-
+            List<String> roles = jwtService.extractClaim(token, claims -> claims.get("roles", List.class));
+            System.out.println("roles: "+roles.toString());
             List<GrantedAuthority> authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
