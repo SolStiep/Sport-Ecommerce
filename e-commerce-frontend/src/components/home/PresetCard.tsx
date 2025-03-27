@@ -1,6 +1,7 @@
 import { FiArrowDown, FiArrowUp, FiShoppingBag } from "react-icons/fi";
 
 import { Preset } from "@/types/preset";
+import { useCart } from "@/contexts/CartContext";
 
 interface PresetCardProps {
   preset: Preset;
@@ -9,11 +10,18 @@ interface PresetCardProps {
 }
 
 export const PresetCard = ({ preset, isExpanded, onToggle }: PresetCardProps) => {
-  const { name, price, selectedOptions } = preset;
+  const { id, name, price, selectedOptions } = preset;
+  const { addItem } = useCart();
 
   const handleAddToCart = () => {
-    // TODO: Integrar con Context o carrito global
-    alert(`Added "${name}" to cart`);
+    addItem({
+      id,
+      name,
+      price,
+      type: "preset",
+      selectedOptions,
+      quantity: 1,
+    });
   };
 
   return (

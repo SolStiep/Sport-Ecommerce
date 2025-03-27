@@ -1,13 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import { FiShoppingCart, FiLogOut, FiList } from "react-icons/fi";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { cartItems } = useCart();
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
 
   const handleCartClick = (e: React.MouseEvent) => {
     if (!user) {
@@ -39,9 +44,14 @@ export const Navbar = () => {
         <Link
           to={user ? "/cart" : "#"}
           onClick={handleCartClick}
-          className="text-stone-700 hover:text-black"
+          className="relative text-stone-700 hover:text-black"
         >
           <FiShoppingCart size={18} />
+          {totalQuantity > 0 && (
+            <span className="absolute -top-2 -right-2 bg-stone-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+              {totalQuantity}
+            </span>
+          )}
         </Link>
 
         {user ? (
