@@ -3,7 +3,6 @@ import {
     useContext,
     useState,
     ReactNode,
-    useEffect,
   } from "react";
   import { CartItem } from "@/types/cart";
   

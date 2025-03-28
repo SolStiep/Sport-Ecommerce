@@ -14,7 +14,7 @@ export const CartItemCard = ({ item }: Props) => {
       <div>
         <h3 className="text-lg font-medium">{item.name}</h3>
         <ul className="text-sm text-gray-700 mt-2">
-          {Object.entries(item.selectedOptions).map(([key, value]) => (
+        {Object.entries(item.selectedOptions as Record<string, string>).map(([key, value]) => (
             <li key={key}>
               <span className="font-medium">{key}:</span> {value}
             </li>

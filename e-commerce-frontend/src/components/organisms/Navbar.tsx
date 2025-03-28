@@ -4,6 +4,7 @@ import { FiShoppingCart, FiLogOut, FiList } from "react-icons/fi";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { Badge } from "@/components/atoms/Badge";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -47,11 +48,7 @@ export const Navbar = () => {
           className="relative text-stone-700 hover:text-black"
         >
           <FiShoppingCart size={18} />
-          {totalQuantity > 0 && (
-            <span className="absolute -top-2 -right-2 bg-stone-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-              {totalQuantity}
-            </span>
-          )}
+          <Badge count={totalQuantity} />
         </Link>
 
         {user ? (
