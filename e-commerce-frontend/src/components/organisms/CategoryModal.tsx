@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Button, List, Space } from "antd";
-import { toast } from 'react-hot-toast';
+import { Modal, Form, Input, Button } from "antd";
+import { toast } from "react-hot-toast";
 import { Category } from "@/types/category";
 import { useCategory } from "@/contexts/CategoryContext";
 import { ConfirmModal } from "../molecules/ConfirmModal";
+import { GenericTable } from "@/components/molecules/GenericTable";
 
 interface CategoryModalProps {
   visible: boolean;
@@ -22,10 +23,19 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
   } = useCategory();
 
   const [editing, setEditing] = useState<Category | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
 
-  const handleFinish = async (values: { name: string; description: string }) => {
+  useEffect(() => {
+    if (visible) fetchCategories();
+  }, [visible]);
+
+  const handleFinish = async (values: {
+    name: string;
+    description: string;
+  }) => {
     try {
       setLoading(true);
       if (editing) {
@@ -58,13 +68,15 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
     form.resetFields();
   };
 
-  const handleDelete = (category) => {
+  const handleDelete = (category: Category) => {
     setSelectedCategory(category);
     setIsModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    removeCategory(selectedCategory.id);
+  const handleConfirmDelete = async () => {
+    if (!selectedCategory) return;
+    await removeCategory(selectedCategory.id);
+    toast.success("Category deleted");
     setIsModalOpen(false);
   };
 
@@ -74,71 +86,78 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
     onClose();
   };
 
+  const columns = [
+    { title: "Name", dataIndex: "name" },
+    { title: "Description", dataIndex: "description" },
+    {
+      title: "Actions",
+      render: (_: any, record: Category) => (
+        <>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
+          <Button danger type="link" onClick={() => handleDelete(record)}>
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ];
+
   return (
     <div>
-    <Modal
-      open={visible}
-      onCancel={handleModalClose}
-      onOk={form.submit}
-      title={editing ? "Edit Category" : "Add Category"}
-      okText={editing ? "Update" : "Add"}
-      confirmLoading={loading}
-    >
-      <Form form={form} onFinish={handleFinish} layout="vertical">
-        <Form.Item
-          name="name"
-          label="Category Name"
-          rules={[{ required: true, message: "Category name is required" }]}
-        >
-          <Input placeholder="e.g. Bikes" />
-        </Form.Item>
+      <Modal
+        width="60vw"
+        open={visible}
+        onCancel={handleModalClose}
+        onOk={form.submit}
+        title={editing ? "Edit Category" : "Add Category"}
+        okText={editing ? "Update" : "Add"}
+        confirmLoading={loading}
+      >
+        <Form form={form} onFinish={handleFinish} layout="vertical">
+          <Form.Item
+            name="name"
+            label="Category Name"
+            rules={[{ required: true, message: "Category name is required" }]}
+          >
+            <Input placeholder="e.g. Bikes" />
+          </Form.Item>
 
-        <Form.Item
-          name="description"
-          label="Description"
-        >
-          <Input.TextArea rows={3} placeholder="Brief description of the category" />
-        </Form.Item>
-      </Form>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea
+              rows={3}
+              placeholder="Brief description of the category"
+            />
+          </Form.Item>
+        </Form>
 
-      {editing && (
-        <div className="mt-2 text-right">
-          <Button type="default" onClick={handleCancelEdit}>
-            Cancel Edit
-          </Button>
+        {editing && (
+          <div className="mt-2 text-right">
+            <Button type="default" onClick={handleCancelEdit}>
+              Cancel Edit
+            </Button>
+          </div>
+        )}
+
+        <div className="mt-6">
+          <h3 className="font-medium mb-2">Existing Categories</h3>
+          <GenericTable<Category>
+            data={categories}
+            columns={columns}
+            rowKey="id"
+          />
         </div>
-      )}
+      </Modal>
 
-      <div className="mt-6">
-        <h3 className="font-medium mb-2">Existing Categories</h3>
-        <List
-          bordered
-          dataSource={categories}
-          renderItem={(item) => (
-            <List.Item
-              actions={[
-                <Button type="link" onClick={() => handleEdit(item)}>Edit</Button>,
-                <Button type="link" danger   onClick={() => handleDelete(item)}>Delete</Button>,
-              ]}
-            >
-              <Space direction="vertical">
-                <span className="font-medium">{item.name}</span>
-                <span className="text-sm text-gray-500">{item.description}</span>
-              </Space>
-            </List.Item>
-          )}
-        />
-      </div>
-    </Modal>
-
-<ConfirmModal
-isOpen={isModalOpen}
-onConfirm={handleConfirmDelete}
-onCancel={() => setIsModalOpen(false)}
-title="Confirm Deletion"
-message={`Are you sure you want to delete the category  "${selectedCategory?.name}"? This action cannot be undone.`}
-/>
-</div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsModalOpen(false)}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete the category "${selectedCategory?.name}"? This action cannot be undone.`}
+      />
+    </div>
   );
 };
 
