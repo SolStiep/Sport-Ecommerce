@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getCategories } from "@/services/categories";
+import categoryService from "@/services/categories"; 
 import { getPresets } from "@/services/presets";
 import { Layout } from "@/components/layout/Layout";
 import { CategoryFilter } from "@/components/home/CategoryFilter";
@@ -18,7 +18,7 @@ export const HomePage = () => {
 
   const { data: categories = [], isLoading: loadingCategories } = useQuery({
     queryKey: ["categories"],
-    queryFn: getCategories,
+    queryFn: () => categoryService.getCategories(),
   });
 
   const { data: presets = [], isLoading: loadingPresets } = useQuery<Preset[]>({
