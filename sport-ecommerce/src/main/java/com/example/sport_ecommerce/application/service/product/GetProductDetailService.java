@@ -9,6 +9,7 @@ import com.example.sport_ecommerce.domain.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,5 +24,12 @@ public class GetProductDetailService implements GetProductDetailUseCase {
         Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
         return responseMapper.toResponse(product);
+    }
+
+    @Override
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(responseMapper::toResponse)
+                .toList();
     }
 }
