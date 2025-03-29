@@ -2,12 +2,14 @@ export interface AuthResponse {
   name: string;
   email: string;
   token?: string;
+  role: 'USER' | 'ADMIN';
 }
 
 export interface User {
   name: string;
   email: string;
   token?: string;
+  role: 'USER' | 'ADMIN';
 }
 
 export interface AuthContextType {
