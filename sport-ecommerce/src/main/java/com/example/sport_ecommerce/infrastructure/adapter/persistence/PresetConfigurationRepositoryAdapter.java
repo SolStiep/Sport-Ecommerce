@@ -34,7 +34,6 @@ public class PresetConfigurationRepositoryAdapter implements PresetConfiguration
     @Override
     public List<PresetConfiguration> findAll() {
         return jpaRepository.findAll().stream()
-                .peek(entity -> System.out.println("Preset ID: " + entity.getId() + ", Product ID: " + entity.getProduct().getId()))
                 .map(this::mapBackWithProduct)
                 .toList();
     }
