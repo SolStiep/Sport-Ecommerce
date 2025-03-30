@@ -8,9 +8,14 @@ import configuratorService from "@/services/configurators";
 interface Props {
   productId: string;
   onSuccess: () => void;
+  readOnly?: boolean;
 }
 
-export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
+export const ConfiguratorForm = ({
+  productId,
+  onSuccess,
+  readOnly = false,
+}: Props) => {
   const { products, editProduct } = useProduct();
   const [product, setProduct] = useState<any>(null);
   const [form] = Form.useForm();
@@ -61,7 +66,7 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                   label="If Option"
                   rules={[{ required: true }]}
                 >
-                  <Select>
+                  <Select readOnly={readOnly}>
                     {/* Populate options dynamically from product parts */}
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
@@ -79,7 +84,7 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                   label="Operator"
                   rules={[{ required: true }]}
                 >
-                  <Select>
+                  <Select readOnly={readOnly}>
                     {operators.map((op) => (
                       <Select.Option key={op} value={op}>
                         {op}
@@ -94,7 +99,7 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                   label="Target Options"
                   rules={[{ required: true }]}
                 >
-                  <Select mode="multiple">
+                  <Select mode="multiple" readOnly={readOnly}>
                     {/* Populate target options dynamically from product parts */}
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
@@ -105,15 +110,18 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                     )}
                   </Select>
                 </Form.Item>
-
-                <Button danger type="link" onClick={() => remove(name)}>
-                  Remove Rule
-                </Button>
+                {!readOnly && (
+                  <Button danger type="link" onClick={() => remove(name)}>
+                    Remove Rule
+                  </Button>
+                )}
               </div>
             ))}
-            <Button type="dashed" onClick={() => add()} block>
-              Add Restriction Rule
-            </Button>
+            {!readOnly && (
+              <Button type="dashed" onClick={() => add()} block>
+                Add Restriction Rule
+              </Button>
+            )}
           </>
         )}
       </Form.List>
@@ -130,7 +138,7 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                   label="If Option"
                   rules={[{ required: true }]}
                 >
-                  <Select>
+                  <Select readOnly={readOnly}>
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
                         <Select.Option key={opt.id} value={opt.id}>
@@ -147,7 +155,7 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                   label="Required Options"
                   rules={[{ required: true }]}
                 >
-                  <Select mode="multiple">
+                  <Select mode="multiple" readOnly={readOnly}>
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
                         <Select.Option key={opt.id} value={opt.id}>
@@ -170,26 +178,31 @@ export const ConfiguratorForm = ({ productId, onSuccess }: Props) => {
                     },
                   ]}
                 >
-                  <InputNumber />
+                  <InputNumber readOnly={readOnly} />
                 </Form.Item>
 
-                <Button danger type="link" onClick={() => remove(name)}>
-                  Remove Price Rule
-                </Button>
+                {!readOnly && (
+                  <Button danger type="link" onClick={() => remove(name)}>
+                    Remove Price Rule
+                  </Button>
+                )}
               </div>
             ))}
-            <Button type="dashed" onClick={() => add()} block>
-              Add Price Rule
-            </Button>
+            {!readOnly && (
+              <Button type="dashed" onClick={() => add()} block>
+                Add Price Rule
+              </Button>
+            )}
           </>
         )}
       </Form.List>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Save Configurator
-        </Button>
-      </Form.Item>
+      {!readOnly && (
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Save Configurator
+          </Button>
+        </Form.Item>
+      )}
     </Form>
   );
 };

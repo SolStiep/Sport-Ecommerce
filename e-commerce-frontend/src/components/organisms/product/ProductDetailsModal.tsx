@@ -3,6 +3,7 @@ import { FiTrash, FiEye, FiEdit3 } from "react-icons/fi";
 
 import { Product } from "@/types/product";
 import { ProductBasicForm } from "@/components/organisms/product/ProductBasicForm";
+import { ConfiguratorForm } from "@/components/organisms/product/ConfiguratorForm";
 
 interface ProductDetailsModalProps {
   visible: boolean;
@@ -50,6 +51,11 @@ export const ProductDetailsModal = ({
         </Space>
       </div>
       <ProductBasicForm product={product} readOnly />
+      <ConfiguratorForm
+        productId={product.id}
+        onSuccess={() => {}}
+        readOnly={true} 
+      />
     </Modal>
   );
 };

@@ -7,11 +7,15 @@ import { Product } from "@/types/product";
 
 interface Props {
   onSuccess: (product: Product) => void;
-  product?: Product; 
+  product?: Product;
   readOnly?: boolean;
 }
 
-export const ProductBasicForm = ({ onSuccess, product, readOnly = false }: Props) => {
+export const ProductBasicForm = ({
+  onSuccess,
+  product,
+  readOnly = false,
+}: Props) => {
   const { addProduct } = useProduct();
   const { categories } = useCategory();
   const [form] = Form.useForm();
@@ -31,18 +35,22 @@ export const ProductBasicForm = ({ onSuccess, product, readOnly = false }: Props
     };
 
     const newProduct = await addProduct(product);
-    onSuccess(newProduct);  
+    onSuccess(newProduct);
   };
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
       <Form.Item name="name" label="Product Name" rules={[{ required: true }]}>
-        <Input readOnly={readOnly}/>
+        <Input readOnly={readOnly} />
       </Form.Item>
       <Form.Item name="description" label="Description">
-        <Input.TextArea readOnly={readOnly}/>
+        <Input.TextArea readOnly={readOnly} />
       </Form.Item>
-      <Form.Item name="categoryId" label="Category" rules={[{ required: true }]}>
+      <Form.Item
+        name="categoryId"
+        label="Category"
+        rules={[{ required: true }]}
+      >
         <Select readOnly={readOnly}>
           {categories.map((cat) => (
             <Select.Option key={cat.id} value={cat.id}>
@@ -56,7 +64,14 @@ export const ProductBasicForm = ({ onSuccess, product, readOnly = false }: Props
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <PartForm key={key} fieldKey={key} fieldName={name} restField={restField} remove={remove} readOnly={readOnly} />
+              <PartForm
+                key={key}
+                fieldKey={key}
+                fieldName={name}
+                restField={restField}
+                remove={remove}
+                readOnly={readOnly}
+              />
             ))}
             {!readOnly && (
               <Button type="dashed" onClick={() => add()} block>
@@ -66,12 +81,13 @@ export const ProductBasicForm = ({ onSuccess, product, readOnly = false }: Props
           </>
         )}
       </Form.List>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Create Product
-        </Button>
-      </Form.Item>
+      {!readOnly && (
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Create Product
+          </Button>
+        </Form.Item>
+      )}
     </Form>
   );
 };
