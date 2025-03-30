@@ -13,5 +13,4 @@ public class PartOptionDTO {
     private String name;
     private float price;
     private boolean inStock;
-    private List<ConditionalPriceDTO> conditionalPrices;
 }

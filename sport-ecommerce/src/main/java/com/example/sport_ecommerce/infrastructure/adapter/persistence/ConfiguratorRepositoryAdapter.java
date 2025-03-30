@@ -1,18 +1,9 @@
 package com.example.sport_ecommerce.infrastructure.adapter.persistence;
 
-import com.example.sport_ecommerce.application.port.out.CategoryRepositoryPort;
 import com.example.sport_ecommerce.application.port.out.ConfiguratorRepositoryPort;
-import com.example.sport_ecommerce.domain.model.Category;
-import com.example.sport_ecommerce.domain.model.Part;
-import com.example.sport_ecommerce.domain.model.PartOption;
-import com.example.sport_ecommerce.domain.model.rule.Rule;
 import com.example.sport_ecommerce.domain.model.service.Configurator;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.*;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.CategoryEntityMapper;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.ConfiguratorEntityMapper;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.ProductEntityMapper;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.RuleEntityMapper;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.repository.CategoryJpaRepository;
+import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.*;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.repository.ConfiguratorJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

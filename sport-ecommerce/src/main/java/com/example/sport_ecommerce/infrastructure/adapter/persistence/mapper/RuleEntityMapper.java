@@ -5,10 +5,7 @@ import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
 import com.example.sport_ecommerce.domain.model.rule.RestrictionRule;
 import com.example.sport_ecommerce.domain.model.rule.Rule;
 import com.example.sport_ecommerce.domain.model.valueobject.RuleOperator;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.PartOptionEntity;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.PriceConditionRuleEntity;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.RestrictionRuleEntity;
-import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.RuleEntity;
+import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.*;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -30,8 +27,10 @@ public abstract class RuleEntityMapper {
     private PriceConditionRuleEntity toPriceConditionRuleEntity(PriceConditionRule rule, List<PartOptionEntity> partOptionEntities) {
         PriceConditionRuleEntity entity = new PriceConditionRuleEntity();
 
+
         PartOptionEntity ifOptionEntity = findPartOptionEntity(rule.getIfOption(), partOptionEntities);
         entity.setIfOption(ifOptionEntity);
+        entity.setPrice(rule.getPrice());
 
         List<PartOptionEntity> requiredOptionEntities = rule.getRequiredOptions().stream()
                 .map(option -> findPartOptionEntity(option, partOptionEntities))
@@ -79,7 +78,7 @@ public abstract class RuleEntityMapper {
                 .map(partOptionEntity -> findPartOption(partOptionEntity, partOptionEntities))
                 .collect(Collectors.toList());
 
-        return new PriceConditionRule(ifOption, requiredOptions);
+        return new PriceConditionRule(ifOption, requiredOptions, entity.getPrice());
     }
 
     private RestrictionRule toRestrictionRule(RestrictionRuleEntity entity, List<PartOptionEntity> partOptionEntities) {

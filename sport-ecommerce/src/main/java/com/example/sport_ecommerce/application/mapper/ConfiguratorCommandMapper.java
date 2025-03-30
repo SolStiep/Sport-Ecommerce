@@ -1,7 +1,6 @@
 package com.example.sport_ecommerce.application.mapper;
 
 import com.example.sport_ecommerce.application.model.dto.*;
-import com.example.sport_ecommerce.domain.model.ConditionalPrice;
 import com.example.sport_ecommerce.domain.model.Part;
 import com.example.sport_ecommerce.domain.model.PartOption;
 import com.example.sport_ecommerce.domain.model.Product;
@@ -39,9 +38,6 @@ public class ConfiguratorCommandMapper {
         for (PriceConditionRuleDTO priceConditionRuleDTO : ruleDTOs.getPriceConditionRules()) {
             PriceConditionRule rule = mapPriceConditionRule(priceConditionRuleDTO, parts);
             rules.add(rule);
-            PartOption option = rule.getIfOption();
-            ConditionalPrice conditionalPrice = new ConditionalPrice(rule, priceConditionRuleDTO.getPrice());
-            option.addConditionalPrice(conditionalPrice);
         }
 
         return rules;
@@ -61,7 +57,9 @@ public class ConfiguratorCommandMapper {
         List<PartOption> requiredOptions = dto.getRequiredOptions().stream()
                 .map(id -> findOptionById(parts, id))
                 .toList();
+        PriceConditionRule rule = new PriceConditionRule(ifOption, requiredOptions, dto.getPrice());
+        ifOption.addPriceConditionRule(rule);
 
-        return new PriceConditionRule(ifOption, requiredOptions);
+        return rule;
     }
 }

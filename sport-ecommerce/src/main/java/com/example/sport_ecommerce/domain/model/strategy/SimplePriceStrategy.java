@@ -1,8 +1,7 @@
 package com.example.sport_ecommerce.domain.model.strategy;
 
-import com.example.sport_ecommerce.domain.model.ConditionalPrice;
 import com.example.sport_ecommerce.domain.model.Configuration;
-import com.example.sport_ecommerce.domain.model.PartOption;
+import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
 
 public class SimplePriceStrategy implements PriceStrategy {
 
@@ -10,9 +9,9 @@ public class SimplePriceStrategy implements PriceStrategy {
     public float calculatePrice(Configuration config) {
         float basePrice = config.getBasePrice();
         float conditionalPrice = config.getSelectedOptions().values().stream()
-                .flatMap(option -> option.getConditionalPrices().stream())
-                .filter(cp -> cp.getCondition().isSatisfied(config))
-                .map(ConditionalPrice::getPrice)
+                .flatMap(option -> option.getPriceConditionRules().stream()) 
+                .filter(rule -> rule.isSatisfied(config)) 
+                .map(PriceConditionRule::getPrice) 
                 .reduce(0f, Float::sum);
 
         return basePrice + conditionalPrice;

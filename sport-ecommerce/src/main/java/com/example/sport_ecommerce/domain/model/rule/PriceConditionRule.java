@@ -16,10 +16,12 @@ public class PriceConditionRule implements Rule {
     private UUID id;
     private PartOption ifOption;
     private List<PartOption> requiredOptions;
+    private float price;
 
-    public PriceConditionRule(PartOption ifOption, List<PartOption> requiredOptions) {
+    public PriceConditionRule(PartOption ifOption, List<PartOption> requiredOptions, float price) {
         this.ifOption = ifOption;
         this.requiredOptions = requiredOptions;
+        this.price = price;
     }
 
     @Override
@@ -31,13 +33,11 @@ public class PriceConditionRule implements Rule {
     public boolean isSatisfied(Configuration config) {
         boolean ifOptionSelected = config.getSelectedOptions().values().stream()
                 .anyMatch(opt -> opt.getId().equals(ifOption.getId()));
-
         if (!ifOptionSelected) return true;
 
         boolean satisfied = requiredOptions.stream()
                 .anyMatch(required -> config.getSelectedOptions().values().stream()
                         .anyMatch(opt -> opt.getId().equals(required.getId())));
-
         if (satisfied) {
             config.addViolationRules(this);
         }

@@ -32,9 +32,6 @@ public abstract class ProductEntityMapper {
             entity.setCategory(categoryEntityMapper.toEntity(product.getCategory()));
         }
 
-        Map<Rule, RuleEntity> ruleEntityMap = new IdentityHashMap<>();
-        Map<PartOption, PartOptionEntity> optionMap = new IdentityHashMap<>();
-
         if (product.getParts() != null) {
             List<PartEntity> partEntities = product.getParts().stream().map(part -> {
                 PartEntity partEntity = PartEntity.builder()
@@ -46,15 +43,13 @@ public abstract class ProductEntityMapper {
                 if (part.getOptions() != null) {
                     List<PartOptionEntity> optionEntities = part.getOptions().stream()
                             .map(option -> {
-                                PartOptionEntity optEntity = PartOptionEntity.builder()
+                                return PartOptionEntity.builder()
                                         .id(option.getId())
                                         .name(option.getName())
                                         .price(option.getPrice())
                                         .inStock(option.isInStock())
                                         .part(partEntity)
                                         .build();
-                                optionMap.put(option, optEntity);
-                                return optEntity;
                             }).toList();
                     partEntity.setOptions(optionEntities);
                 }
@@ -88,17 +83,6 @@ public abstract class ProductEntityMapper {
             ));
         }
 
-        Map<UUID, Rule> ruleMap = new HashMap<>();
-        Map<UUID, PartOption> partOptionMap = new HashMap<>();
-
-        if (entity.getConfigurator() != null) {
-            List<PartOptionEntity> partOptionEntities = entity.getParts().stream()
-                    .flatMap(part -> part.getOptions().stream())
-                    .toList();
-            Configurator configurator = configuratorMapper.toDomain(entity.getConfigurator(), partOptionEntities);
-            configurator.setProduct(product);
-            product.setConfigurator(configurator);
-        }
         if (entity.getParts() != null) {
             List<Part> parts = new ArrayList<>();
 
@@ -106,15 +90,35 @@ public abstract class ProductEntityMapper {
                 Part part = new Part(partEntity.getId(), partEntity.getName(), product, new ArrayList<>());
 
                 for (PartOptionEntity optEntity : partEntity.getOptions()) {
-                    PartOption option = partOptionEntityMapper.toDomain(optEntity, ruleMap);
+                    PartOption option = partOptionEntityMapper.toDomain(optEntity);
                     part.getOptions().add(option);
-                    partOptionMap.put(option.getId(), option);
                 }
 
                 parts.add(part);
             }
 
             product.setParts(parts);
+        }
+
+        if (entity.getConfigurator() != null) {
+            assert entity.getParts() != null;
+            List<PartOptionEntity> partOptionEntities = entity.getParts().stream()
+                    .flatMap(part -> part.getOptions().stream())
+                    .toList();
+            Configurator configurator = configuratorMapper.toDomain(entity.getConfigurator(), partOptionEntities);
+            configurator.setProduct(product);
+            product.setConfigurator(configurator);
+
+            for (Part part : product.getParts()) {
+                for (PartOption option : part.getOptions()) {
+                    List<PriceConditionRule> priceConditionRules = configurator.getRules().stream()
+                            .filter(rule -> rule instanceof PriceConditionRule)
+                            .map(rule -> (PriceConditionRule) rule)
+                            .filter(rule -> rule.getIfOption().getId().equals(option.getId()))
+                            .collect(Collectors.toList());
+                    option.setPriceConditionRules(priceConditionRules);
+                }
+            }
         }
 
         return product;

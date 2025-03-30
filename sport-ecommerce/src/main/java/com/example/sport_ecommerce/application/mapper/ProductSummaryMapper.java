@@ -4,11 +4,9 @@ import com.example.sport_ecommerce.application.model.response.ConditionalPriceRe
 import com.example.sport_ecommerce.application.model.response.PartOptionResponse;
 import com.example.sport_ecommerce.application.model.response.PartResponse;
 import com.example.sport_ecommerce.application.model.response.ProductSummaryResponse;
-import com.example.sport_ecommerce.domain.model.ConditionalPrice;
 import com.example.sport_ecommerce.domain.model.Part;
 import com.example.sport_ecommerce.domain.model.PartOption;
 import com.example.sport_ecommerce.domain.model.Product;
-import com.example.sport_ecommerce.domain.model.rule.Rule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -26,23 +24,7 @@ public interface ProductSummaryMapper {
 
     PartResponse toPartResponse(Part part);
 
-    @Mapping(target = "conditionalPrices", source = "conditionalPrices", qualifiedByName = "mapConditionalPrices")
     PartOptionResponse toPartOptionResponse(PartOption option);
-
-    @Named("mapConditionalPrices")
-    default List<ConditionalPriceResponse> mapConditionalPrices(List<ConditionalPrice> domainList) {
-        if (domainList == null || domainList.isEmpty()) {
-            return List.of();
-        }
-
-        return domainList.stream()
-                .filter(cp -> cp.getCondition() != null && cp.getCondition().getId() != null)
-                .map(cp -> ConditionalPriceResponse.builder()
-                        .ruleId(cp.getCondition().getId())
-                        .price(cp.getPrice())
-                        .build())
-                .toList();
-    }
 
     @Named("mapPartOptionToString")
     default String mapPartOptionToString(PartOption partOption) {

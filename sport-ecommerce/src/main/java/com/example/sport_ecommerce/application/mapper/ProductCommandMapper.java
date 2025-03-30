@@ -43,6 +43,6 @@ public class ProductCommandMapper {
     }
 
     private PartOption mapPartOption(PartOptionDTO dto) {
-        return new PartOption(dto.getName(), dto.getPrice(), dto.isInStock(), List.of());
+        return new PartOption(dto.getName(), dto.getPrice(), dto.isInStock(), new ArrayList<>());
     }
 }

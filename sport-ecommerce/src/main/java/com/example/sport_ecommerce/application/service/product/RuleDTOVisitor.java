@@ -39,6 +39,7 @@ public class RuleDTOVisitor implements RuleVisitor {
                 .requiredOptions(priceConditionRule.getRequiredOptions().stream()
                         .map(PartOption::getId)
                         .collect(Collectors.toList()))
+                .price(priceConditionRule.getPrice())
                 .build();
         ruleDTOs.addToPriceConditionRules(dto);
     }
