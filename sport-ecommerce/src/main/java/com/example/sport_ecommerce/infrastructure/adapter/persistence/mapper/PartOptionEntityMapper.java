@@ -7,6 +7,7 @@ import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.*;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -50,17 +51,12 @@ public abstract class PartOptionEntityMapper {
     }
 
     public PartOption toDomain(PartOptionEntity entity, Map<UUID, Rule> ruleMap) {
-        List<ConditionalPrice> conditionalPrices = entity.getConditionalPrices() != null ?
-                entity.getConditionalPrices().stream()
-                        .map(cp -> conditionalPriceEntityMapper.toDomain(cp, ruleMap))
-                        .toList() : List.of();
-
         return new PartOption(
                 entity.getId(),
                 entity.getName(),
                 entity.getPrice(),
                 entity.isInStock(),
-                conditionalPrices
+                new ArrayList<>()
         );
     }
 

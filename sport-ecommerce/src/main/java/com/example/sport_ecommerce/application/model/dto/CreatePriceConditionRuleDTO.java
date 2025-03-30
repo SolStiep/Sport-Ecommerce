@@ -15,4 +15,5 @@ public class CreatePriceConditionRuleDTO {
     private String ifOption;
     @EqualsAndHashCode.Include
     private List<String> requiredOptions;
+    private float price;
 }

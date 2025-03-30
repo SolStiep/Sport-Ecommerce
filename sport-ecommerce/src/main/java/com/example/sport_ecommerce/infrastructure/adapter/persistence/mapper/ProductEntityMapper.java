@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class ProductEntityMapper {
@@ -64,22 +65,6 @@ public abstract class ProductEntityMapper {
             entity.setParts(partEntities);
         }
 
-        if (product.getConfigurator() != null) {
-            ConfiguratorEntity configuratorEntity =
-                    configuratorMapper.toEntity(product.getConfigurator(), entity, ruleEntityMap, optionMap);
-            configuratorEntity.setProduct(entity);
-            entity.setConfigurator(configuratorEntity);
-        }
-
-        if (product.getParts() != null) {
-            for (Part part : product.getParts()) {
-                for (PartOption option : part.getOptions()) {
-                    PartOptionEntity optionEntity = optionMap.get(option);
-                    partOptionEntityMapper.mapConditionalPrices(option, optionEntity, ruleEntityMap);
-                }
-            }
-        }
-
         return entity;
     }
 
@@ -107,35 +92,13 @@ public abstract class ProductEntityMapper {
         Map<UUID, PartOption> partOptionMap = new HashMap<>();
 
         if (entity.getConfigurator() != null) {
-            List<Rule> rules = entity.getConfigurator().getRules().stream()
-                    .map(ruleEntity -> {
-                        Rule rule;
-                        if (ruleEntity instanceof RestrictionRuleEntity restriction) {
-                            rule = ruleEntityMapper.toDomain(restriction);
-                        } else if (ruleEntity instanceof PriceConditionRuleEntity priceCondition) {
-                            rule = ruleEntityMapper.toDomain(priceCondition);
-                        } else {
-                            throw new IllegalArgumentException("Unknown rule type: " + ruleEntity.getClass());
-                        }
-
-                        if (ruleEntity.getId() != null) {
-                            rule.setId(ruleEntity.getId());
-                            ruleMap.put(ruleEntity.getId(), rule);
-                        }
-
-                        return rule;
-                    }).toList();
-
-            Configurator configurator = new Configurator(
-                    entity.getConfigurator().getId(),
-                    product,
-                    rules,
-                    entity.getConfigurator().getPriceStrategyType()
-            );
+            List<PartOptionEntity> partOptionEntities = entity.getParts().stream()
+                    .flatMap(part -> part.getOptions().stream())
+                    .toList();
+            Configurator configurator = configuratorMapper.toDomain(entity.getConfigurator(), partOptionEntities);
             configurator.setProduct(product);
             product.setConfigurator(configurator);
         }
-
         if (entity.getParts() != null) {
             List<Part> parts = new ArrayList<>();
 

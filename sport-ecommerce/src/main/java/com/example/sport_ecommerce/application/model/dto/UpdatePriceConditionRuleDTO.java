@@ -11,8 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class PriceConditionRuleDTO {
-    private UUID id;
+public class UpdatePriceConditionRuleDTO {
     @EqualsAndHashCode.Include
     private UUID ifOption;
     @EqualsAndHashCode.Include

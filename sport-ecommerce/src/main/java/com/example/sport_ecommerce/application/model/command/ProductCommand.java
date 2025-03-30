@@ -17,5 +17,4 @@ public class ProductCommand {
     private String description;
     private UUID categoryId;
     private List<PartDTO> parts;
-    private ConfiguratorDTO configurator;
 }
