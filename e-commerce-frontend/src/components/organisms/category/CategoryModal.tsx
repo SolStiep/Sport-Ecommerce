@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button, Space, Tooltip } from "antd";
+import { FiTrash, FiEye, FiEdit3 } from "react-icons/fi";
 import { toast } from "react-hot-toast";
+
 import { Category } from "@/types/category";
 import { useCategory } from "@/contexts/CategoryContext";
-import { ConfirmModal } from "../molecules/ConfirmModal";
+import { ConfirmModal } from "@/components/molecules/ConfirmModal";
 import { GenericTable } from "@/components/molecules/GenericTable";
 
 interface CategoryModalProps {
@@ -93,12 +95,23 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
       title: "Actions",
       render: (_: any, record: Category) => (
         <>
-          <Button type="link" onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
-          <Button danger type="link" onClick={() => handleDelete(record)}>
-            Delete
-          </Button>
+          <Space size="middle">
+            <Tooltip title="Edit">
+              <Button
+                type="link"
+                icon={<FiEdit3 />}
+                onClick={() => onEdit(record)}
+              />
+            </Tooltip>
+            <Tooltip title="Delete">
+              <Button
+                danger
+                type="link"
+                icon={<FiTrash />}
+                onClick={() => handleDelete(record)}
+              />
+            </Tooltip>
+          </Space>
         </>
       ),
     },

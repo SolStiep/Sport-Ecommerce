@@ -5,15 +5,13 @@ import { ContactPage } from "@/pages/Contact/ContactPage";
 import { LoginPage } from "@/pages/Auth/LoginPage";
 import { RegisterPage } from "@/pages/Auth/RegisterPage";
 import { AdminDashboard } from "@/pages/Admin/AdminDashboard";
+import { ProductFormPage } from "@/pages/Admin/ProductFormPage";
+import { ConfiguratorFormPage } from "@/pages/Admin/ConfiguratorFormPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import AdminRoute from "@/router/AdminRoute";
-// import { ProductDetailsPage } from "@/pages/ProductDetails/ProductDetailsPage";
-// import { ConfiguratorPage } from "@/pages/Configurator/ConfiguratorPage";
 
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
-  //   { path: "/products/:productId", element: <ProductDetailsPage /> },
-  //   { path: "/configurator/:productId", element: <ConfiguratorPage /> },
   { path: "/about", element: <AboutPage /> },
   { path: "/contact", element: <ContactPage /> },
   { path: "/login", element: <LoginPage /> },
@@ -24,6 +22,30 @@ export const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <AdminDashboard />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/products/new",
+    element: (
+      <AdminRoute>
+        <ProductFormPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/products/:productId/edit",
+    element: (
+      <AdminRoute>
+        <ProductFormPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/products/:productId/configurator",
+    element: (
+      <AdminRoute>
+        <ConfiguratorFormPage />
       </AdminRoute>
     ),
   },

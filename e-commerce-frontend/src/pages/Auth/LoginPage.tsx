@@ -18,7 +18,6 @@ export const LoginPage = () => {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      console.log(err)
       setError("Invalid credentials or server error.");
     }
   };
