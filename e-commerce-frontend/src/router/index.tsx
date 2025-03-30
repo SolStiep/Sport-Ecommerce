@@ -4,6 +4,7 @@ import { AboutPage } from "@/pages/About/AboutPage";
 import { ContactPage } from "@/pages/Contact/ContactPage";
 import { LoginPage } from "@/pages/Auth/LoginPage";
 import { RegisterPage } from "@/pages/Auth/RegisterPage";
+import { CartPage } from "@/pages/Cart/CartPage";
 import { AdminDashboard } from "@/pages/Admin/AdminDashboard";
 import { ProductFormPage } from "@/pages/Admin/ProductFormPage";
 import { ConfiguratorFormPage } from "@/pages/Admin/ConfiguratorFormPage";
@@ -51,4 +52,5 @@ export const router = createBrowserRouter([
       </AdminRoute>
     ),
   },
+    { path: "/cart", element: <CartPage /> },
 ]);
