@@ -1,11 +1,25 @@
 import axiosInstance from "../utils/axiosInstance";
+import { Preset } from "@types/preset";
 
-export const getPresets = async () => {
-  const { data } = await axiosInstance.get(`/presets/catalog`);
-  return data;
-};
+class PresetService {
+  async getPresets(): Promise<Preset[]> {
+    const { data } = await axiosInstance.get(`/presets/catalog`);
+    return data;
+  }
 
-export const getPresetById = async (presetId: string) => {
-  const { data } = await axiosInstance.get(`/presets/${presetId}`);
-  return data;
-};
+  async getPresetById(presetId: string): Promise<Preset> {
+    const { data } = await axiosInstance.get(`/presets/${presetId}`);
+    return data;
+  }
+
+  async create(presetData: Preset): Promise<Preset> {
+    const { data } = axiosInstance.post("/presets", presetData);
+    return data;
+  }
+
+  async delete(id: string): Promise<void> {
+    await axiosInstance.delete(`/presets/${id}`);
+  }
+}
+
+export default new PresetService();

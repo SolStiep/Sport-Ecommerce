@@ -7,6 +7,7 @@ import { router } from "./router";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { ProductProvider } from "@/contexts/ProductContext";
+import { PresetProvider } from "@/contexts/PresetContext";
 import { CategoryProvider } from "@/contexts/CategoryContext";
 import { ConfigProvider } from "antd";
 import { Toaster } from "react-hot-toast";
@@ -27,15 +28,18 @@ createRoot(document.getElementById("root")!).render(
         <AuthProvider>
           <ProductProvider>
             <CategoryProvider>
-              <QueryClientProvider client={queryClient}>
-                <>
-                  <RouterProvider router={router} />
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{ duration: 3000 }}
-                  />
-                </>
-              </QueryClientProvider>
+              <PresetProvider>
+                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+                <QueryClientProvider client={queryClient}>
+                  <>
+                    <RouterProvider router={router} />
+                    <Toaster
+                      position="top-right"
+                      toastOptions={{ duration: 3000 }}
+                    />
+                  </>
+                </QueryClientProvider>
+              </PresetProvider>
             </CategoryProvider>
           </ProductProvider>
         </AuthProvider>

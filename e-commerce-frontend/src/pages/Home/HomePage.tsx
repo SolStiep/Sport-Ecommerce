@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import categoryService from "@/services/categories";
-import { getPresets } from "@/services/presets";
+import presetService from "@/services/presets";
 import { Layout } from "@/components/layout/Layout";
 import { CategoryFilter } from "@/components/home/CategoryFilter";
 import { PresetCard } from "@/components/home/PresetCard";
@@ -25,7 +25,7 @@ export const HomePage = () => {
 
   const { data: presets = [], isLoading: loadingPresets } = useQuery<Preset[]>({
     queryKey: ["presets"],
-    queryFn: getPresets,
+    queryFn: () => presetService.getPresets(),
   });
 
   const handleToggleDetails = (id: string) => {

@@ -8,6 +8,8 @@ import { CartPage } from "@/pages/Cart/CartPage";
 import { AdminDashboard } from "@/pages/Admin/AdminDashboard";
 import { ProductFormPage } from "@/pages/Admin/ProductFormPage";
 import { ConfiguratorFormPage } from "@/pages/Admin/ConfiguratorFormPage";
+import { PresetCreatorPage } from "@/pages/Admin/PresetCreatorPage";
+import { PresetManagementPage } from "@/pages/Admin/PresetManagementPage";
 import { OrderHistoryPage } from "@/pages/Order/OrderHistoryPage";
 import { ProductCustomizationPage } from "@/pages/ProductCustomization/ProductCustomizationPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
@@ -51,6 +53,22 @@ export const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <ConfiguratorFormPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/presets/new",
+    element: (
+      <AdminRoute>
+        <PresetCreatorPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/presets",
+    element: (
+      <AdminRoute>
+        <PresetManagementPage />
       </AdminRoute>
     ),
   },

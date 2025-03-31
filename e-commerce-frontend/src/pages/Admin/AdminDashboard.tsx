@@ -36,7 +36,7 @@ export const AdminDashboard = () => {
     <Layout>
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold">Admin Dashboard - Products</h1>
           <div className="flex gap-3">
             <Button
               type="default"
@@ -52,6 +52,7 @@ export const AdminDashboard = () => {
             >
               Add Product
             </Button>
+            
           </div>
         </div>
 
