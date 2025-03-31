@@ -1,5 +1,6 @@
 package com.example.sport_ecommerce.domain.model;
 
+import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
 import com.example.sport_ecommerce.domain.model.rule.Rule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,12 @@ public class Configuration {
     protected Product product;
     protected Map<Part, PartOption> selectedOptions;
     private final Set<Rule> violationRules = new HashSet<>();
+    private int quantity;
 
-    public Configuration(Product product, Map<Part, PartOption> selectedOptions) {
+    public Configuration(Product product, Map<Part, PartOption> selectedOptions, int quantity) {
         this.product = product;
         this.selectedOptions = selectedOptions;
+        this.quantity = quantity;
     }
 
     public float getBasePrice() {
@@ -27,7 +30,24 @@ public class Configuration {
                 .reduce(0f, Float::sum);
     }
 
+    public float getConditionalPrice() {
+        return selectedOptions.values().stream()
+                .flatMap(option -> option.getPriceConditionRules().stream())
+                .filter(rule -> rule.isSatisfied(this))
+                .map(PriceConditionRule::getPrice)
+                .reduce(0f, Float::sum);
+    }
+
     public void addViolationRules(Rule rule) {
         violationRules.add(rule);
     }
+
+    public String getName() {
+        return product.getName();
+    }
+
+    public boolean isPreset() {
+        return false;
+    }
+
 }
