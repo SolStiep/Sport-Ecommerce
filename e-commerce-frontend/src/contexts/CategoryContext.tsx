@@ -5,6 +5,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+import { toast } from "react-hot-toast";
+
 import { Category, CategoryContextType } from "@/types/category";
 import categoryService from "@/services/categories";
 
@@ -22,25 +24,41 @@ export const CategoryProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const fetchCategories = async () => {
-    const data = await categoryService.getCategories();
-    setCategories(data);
+    try {
+      const data = await categoryService.getCategories();
+      setCategories(data);
+    } catch (err) {
+      toast.error("Error fetching categories. Please try again.");
+    }
   };
 
   const addCategory = async (category: Category) => {
-    const newCategory = await categoryService.create(category);
-    setCategories((prev) => [...prev, newCategory]);
+    try {
+      const newCategory = await categoryService.create(category);
+      setCategories((prev) => [...prev, newCategory]);
+    } catch (err) {
+      toast.error("Error adding category. Please try again.");
+    }
   };
 
   const editCategory = async (category: Category) => {
-    const updatedCategory = await categoryService.update(category);
-    setCategories((prev) =>
-      prev.map((c) => (c.id === category.id ? updatedCategory : c))
-    );
+    try {
+      const updatedCategory = await categoryService.update(category);
+      setCategories((prev) =>
+        prev.map((c) => (c.id === category.id ? updatedCategory : c))
+      );
+    } catch (err) {
+      toast.error("Error editing categories. Please try again.");
+    }
   };
 
   const removeCategory = async (id: string) => {
-    await categoryService.delete(id);
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await categoryService.delete(id);
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      toast.error("Error deleting category. Please try again.");
+    }
   };
 
   return (

@@ -1,4 +1,12 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import { toast } from "react-hot-toast";
+
 import { Product } from "@/types/product";
 import productService from "@/services/products";
 import { ProductContextType } from "@/types/product";
@@ -15,26 +23,42 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const fetchProducts = async () => {
-    const data = await productService.fetchProducts();
-    setProducts(data);
+    try {
+      const data = await productService.fetchProducts();
+      setProducts(data);
+    } catch (err) {
+      toast.error("Error fetching products. Please try again.");
+    }
   };
 
   const addProduct = async (product: Product) => {
-    const newProduct = await productService.create(product);
-    setProducts((prev) => [...prev, newProduct]);
-    return newProduct.id; 
+    try {
+      const newProduct = await productService.create(product);
+      setProducts((prev) => [...prev, newProduct]);
+      return newProduct.id;
+    } catch (err) {
+      toast.error("Error adding product. Please try again.");
+    }
   };
 
   const editProduct = async (product: Product) => {
-    const updatedProduct = await productService.update(product);
-    setProducts((prev) =>
-      prev.map((p) => (p.id === product.id ? updatedProduct : p))
-    );
+    try {
+      const updatedProduct = await productService.update(product);
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? updatedProduct : p))
+      );
+    } catch (err) {
+      toast.error("Error editing product. Please try again.");
+    }
   };
 
   const removeProduct = async (id: string) => {
-    await productService.deleteProduct(id);
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+    try {
+      await productService.deleteProduct(id);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      toast.error("Error deleting product. Please try again.");
+    }
   };
 
   return (
