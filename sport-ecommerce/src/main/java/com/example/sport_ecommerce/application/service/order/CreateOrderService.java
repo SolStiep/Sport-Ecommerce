@@ -27,7 +27,7 @@ public class CreateOrderService implements CreateOrderUseCase {
 
     @Override
     public OrderDetailResponse createOrder(CreateOrderCommand command) {
-        User user = userRepository.findById(command.getUserId())
+        User user = userRepository.findByEmail(command.getUserEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
 
         List<Configuration> items = configurationMapper.toDomainList(command.getItems());
