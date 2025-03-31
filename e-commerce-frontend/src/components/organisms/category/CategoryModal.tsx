@@ -54,7 +54,7 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
       form.resetFields();
       setEditing(null);
     } catch {
-      toast.error("Error saving category");
+      toast.error("Error saving category. Please try again.");
     } finally {
       setLoading(false);
     }

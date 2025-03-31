@@ -8,6 +8,7 @@ import { CartPage } from "@/pages/Cart/CartPage";
 import { AdminDashboard } from "@/pages/Admin/AdminDashboard";
 import { ProductFormPage } from "@/pages/Admin/ProductFormPage";
 import { ConfiguratorFormPage } from "@/pages/Admin/ConfiguratorFormPage";
+import { OrderHistoryPage } from "@/pages/Order/OrderHistoryPage";
 import { ProductCustomizationPage } from "@/pages/ProductCustomization/ProductCustomizationPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import AdminRoute from "@/router/AdminRoute";
@@ -15,6 +16,7 @@ import AdminRoute from "@/router/AdminRoute";
 export const router = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { path: "/customize", element: <ProductCustomizationPage /> },
+  { path: "/orders", element: <OrderHistoryPage /> },
   { path: "/about", element: <AboutPage /> },
   { path: "/contact", element: <ContactPage /> },
   { path: "/login", element: <LoginPage /> },

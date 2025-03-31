@@ -22,7 +22,6 @@ export const Navbar = () => {
     }
   };
 
-  // Cierra el menú al clickear afuera
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {

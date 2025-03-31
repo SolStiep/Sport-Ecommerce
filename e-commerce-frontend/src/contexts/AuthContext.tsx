@@ -2,12 +2,14 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 import { loginApi, registerApi, logoutApi } from "@/services/auth";
 import { AuthContextType, User } from "@/types/auth";
+import { useCart } from "@/contexts/CartContext";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { clearCart } = useCart();
 
   useEffect(() => {
     const stored = localStorage.getItem("authUser");
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     localStorage.removeItem("authUser");
     logoutApi();
+    clearCart();
   };
 
 
