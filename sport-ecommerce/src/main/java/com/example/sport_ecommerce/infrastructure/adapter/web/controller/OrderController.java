@@ -2,14 +2,15 @@ package com.example.sport_ecommerce.infrastructure.adapter.web.controller;
 
 import com.example.sport_ecommerce.application.model.command.CreateOrderCommand;
 import com.example.sport_ecommerce.application.model.response.OrderDetailResponse;
-import com.example.sport_ecommerce.application.model.response.UserOrderSummaryResponse;
 import com.example.sport_ecommerce.application.port.in.order.CreateOrderUseCase;
+import com.example.sport_ecommerce.application.port.in.order.DeleteOrderUseCase;
 import com.example.sport_ecommerce.application.port.in.order.GetOrderDetailUseCase;
 import com.example.sport_ecommerce.application.port.in.order.GetUserOrdersUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class OrderController {
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderDetailUseCase getOrderDetailUseCase;
     private final GetUserOrdersUseCase getUserOrdersUseCase;
+    private final DeleteOrderUseCase deleteOrderUseCase;
 
     @PostMapping
     public ResponseEntity<OrderDetailResponse> createOrder(@RequestBody @Valid CreateOrderCommand command) {
@@ -35,9 +37,16 @@ public class OrderController {
         return ResponseEntity.ok(getOrderDetailUseCase.getOrderById(id));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserOrderSummaryResponse>> getOrdersByUser(@PathVariable UUID userId) {
-        return ResponseEntity.ok(getUserOrdersUseCase.getOrdersByUser(userId));
+    @GetMapping
+    public ResponseEntity<List<OrderDetailResponse>> getOrdersByUser() {
+        return ResponseEntity.ok(getUserOrdersUseCase.getOrdersByUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        deleteOrderUseCase.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

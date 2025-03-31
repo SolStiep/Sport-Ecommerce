@@ -35,4 +35,3 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return jpaRepository.findByEmail(email).map(mapper::toDomain);
     }
 }
-

@@ -38,7 +38,6 @@ public class ProductController {
     }
 
     @GetMapping("/full")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductResponse>> getAllFullProducts() {
         List<ProductResponse> fullProducts = getProductDetailUseCase.getAllProducts();
         return ResponseEntity.ok(fullProducts);

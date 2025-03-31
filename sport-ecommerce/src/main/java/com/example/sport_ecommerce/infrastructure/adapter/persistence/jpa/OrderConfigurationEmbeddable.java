@@ -16,6 +16,9 @@ public class OrderConfigurationEmbeddable {
 
     private UUID productId;
     private String productName;
+    private int quantity;
+    private boolean preset;
+    private Float price;
 
     @Lob
     @Column(name = "selected_options_json", columnDefinition = "TEXT")
