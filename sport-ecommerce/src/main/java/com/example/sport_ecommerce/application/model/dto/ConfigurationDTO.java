@@ -13,4 +13,8 @@ import java.util.UUID;
 public class ConfigurationDTO {
     private UUID productId;
     private Map<UUID, UUID> selectedOptions;
+    private int quantity;
+    private boolean preset;
+    private float presetPrice;
+    private String presetName;
 }

@@ -4,7 +4,6 @@ import com.example.sport_ecommerce.application.model.dto.ConfigurationDTO;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,6 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CreateOrderCommand {
-    private UUID userId;
+    private String userEmail;
     private List<ConfigurationDTO> items;
 }
