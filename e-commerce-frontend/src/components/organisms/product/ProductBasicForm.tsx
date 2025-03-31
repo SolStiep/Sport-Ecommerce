@@ -82,11 +82,17 @@ export const ProductBasicForm = ({
         )}
       </Form.List>
       {!readOnly && (
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Create Product
-          </Button>
-        </Form.Item>
+        <div className="flex justify-end mb-4 mt-4">
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="!bg-stone-500 !hover:bg-stone-700 !text-white"
+            >
+              Create Product
+            </Button>
+          </Form.Item>
+        </div>
       )}
     </Form>
   );

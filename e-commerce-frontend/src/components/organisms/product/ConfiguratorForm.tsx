@@ -66,7 +66,7 @@ export const ConfiguratorForm = ({
                   label="If Option"
                   rules={[{ required: true }]}
                 >
-                  <Select readOnly={readOnly}>
+                  <Select disabled={readOnly}>
                     {/* Populate options dynamically from product parts */}
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
@@ -84,7 +84,7 @@ export const ConfiguratorForm = ({
                   label="Operator"
                   rules={[{ required: true }]}
                 >
-                  <Select readOnly={readOnly}>
+                  <Select disabled={readOnly}>
                     {operators.map((op) => (
                       <Select.Option key={op} value={op}>
                         {op}
@@ -99,7 +99,7 @@ export const ConfiguratorForm = ({
                   label="Target Options"
                   rules={[{ required: true }]}
                 >
-                  <Select mode="multiple" readOnly={readOnly}>
+                  <Select mode="multiple" disabled={readOnly}>
                     {/* Populate target options dynamically from product parts */}
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
@@ -138,7 +138,7 @@ export const ConfiguratorForm = ({
                   label="If Option"
                   rules={[{ required: true }]}
                 >
-                  <Select readOnly={readOnly}>
+                  <Select disabled={readOnly}>
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
                         <Select.Option key={opt.id} value={opt.id}>
@@ -155,7 +155,7 @@ export const ConfiguratorForm = ({
                   label="Required Options"
                   rules={[{ required: true }]}
                 >
-                  <Select mode="multiple" readOnly={readOnly}>
+                  <Select mode="multiple" disabled={readOnly}>
                     {product?.parts?.map((part: any) =>
                       part.options.map((opt: any) => (
                         <Select.Option key={opt.id} value={opt.id}>
@@ -189,7 +189,7 @@ export const ConfiguratorForm = ({
               </div>
             ))}
             {!readOnly && (
-              <Button type="dashed" onClick={() => add()} block>
+              <Button type="dashed" className="!mt-4" onClick={() => add()} block>
                 Add Price Rule
               </Button>
             )}
@@ -197,11 +197,17 @@ export const ConfiguratorForm = ({
         )}
       </Form.List>
       {!readOnly && (
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Save Configurator
-          </Button>
-        </Form.Item>
+        <div className="flex justify-end mb-4 mt-4">
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="!bg-stone-500 !hover:bg-stone-700 !text-white"
+            >
+              Save Configurator
+            </Button>
+          </Form.Item>
+        </div>
       )}
     </Form>
   );
