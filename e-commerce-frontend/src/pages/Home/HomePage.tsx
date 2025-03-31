@@ -50,7 +50,7 @@ export const HomePage = () => {
       <div className="max-w-5xl mx-auto px-4">
         <div className="text-center my-10">
           <h1 className="text-4xl font-bold mb-3">Find Your Perfect Bike</h1>
-          <p className="text-gray-600">
+          <p className="text-stone-600">
             Explore our range of high-quality bicycles for every type of rider.
           </p>
           <button onClick={() => navigate("/customize")} className="bg-stone-500 py-2 px-4 mt-4 text-white rounded-full text-md hover:bg-stone-700">

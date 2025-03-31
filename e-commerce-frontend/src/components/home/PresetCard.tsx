@@ -1,4 +1,5 @@
 import { FiArrowDown, FiArrowUp, FiShoppingBag } from "react-icons/fi";
+import { Button } from "antd";
 
 import { Preset } from "@/types/preset";
 import { useCart } from "@/contexts/CartContext";
@@ -10,7 +11,7 @@ interface PresetCardProps {
 }
 
 export const PresetCard = ({ preset, isExpanded, onToggle }: PresetCardProps) => {
-  const { id, name, price, selectedOptions } = preset;
+  const { id, name, price, selectedOptions, product } = preset;
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
@@ -21,14 +22,15 @@ export const PresetCard = ({ preset, isExpanded, onToggle }: PresetCardProps) =>
       type: "preset",
       selectedOptions,
       quantity: 1,
+      product
     });
   };
 
   return (
     <div className="border rounded-lg shadow-sm hover:shadow-md transition-all bg-white p-5 flex flex-col justify-between">
       <div>
-        <h3 className="text-lg font-semibold text-gray-700 mb-1">{name}</h3>
-        <p className="text-sm text-gray-500 mb-2">€{price.toFixed(2)}</p>
+        <h3 className="text-lg font-semibold text-stone-700 mb-1">{name}</h3>
+        <p className="text-sm text-stone-500 mb-2">€{price.toFixed(2)}</p>
 
         <button
           className="flex items-center text-sm text-stone-670 hover:underline mb-2"
@@ -46,7 +48,7 @@ export const PresetCard = ({ preset, isExpanded, onToggle }: PresetCardProps) =>
         </button>
 
         {isExpanded && (
-          <ul className="bg-gray-50 p-3 mb-2 rounded text-sm text-gray-700 space-y-1 border border-gray-200 animate-fade-in">
+          <ul className="bg-gray-50 p-3 mb-2 rounded text-sm text-stone-700 space-y-1 border border-gray-200 animate-fade-in">
             {Object.entries(selectedOptions as Record<string, string>).map(([key, value]) => (
               <li key={key}>
                 <span className="font-medium">{key}:</span> {value}

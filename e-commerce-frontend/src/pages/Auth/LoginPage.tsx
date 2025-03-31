@@ -29,7 +29,7 @@ export const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-stone-700">Email</label>
             <input
               type="email"
               value={email}
@@ -40,7 +40,7 @@ export const LoginPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-stone-700">Password</label>
             <input
               type="password"
               value={password}
@@ -54,13 +54,13 @@ export const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-stone-600 text-white py-2 rounded-md hover:bg-stone-700 transition"
           >
             Log In
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center text-gray-600">
+        <p className="mt-4 text-sm text-center text-stone-600">
           Don't have an account?{" "}
           <a href="/register" className="text-blue-600 hover:underline">
             Register here

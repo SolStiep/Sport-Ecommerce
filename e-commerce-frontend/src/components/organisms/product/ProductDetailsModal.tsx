@@ -37,7 +37,7 @@ export const ProductDetailsModal = ({
             <Button
               type="link"
               icon={<FiEdit3 />}
-              onClick={() => onEdit(record)}
+              onClick={() => onEdit(product)}
             />
           </Tooltip>
           <Tooltip title="Delete">
@@ -45,7 +45,7 @@ export const ProductDetailsModal = ({
               danger
               type="link"
               icon={<FiTrash />}
-              onClick={() => onDelete(record.id)}
+              onClick={() => onDelete(product.id)}
             />
           </Tooltip>
         </Space>
@@ -54,7 +54,7 @@ export const ProductDetailsModal = ({
       <ConfiguratorForm
         productId={product.id}
         onSuccess={() => {}}
-        readOnly={true} 
+        readOnly 
       />
     </Modal>
   );

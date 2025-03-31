@@ -100,7 +100,7 @@ export const CategoryModal = ({ visible, onClose }: CategoryModalProps) => {
               <Button
                 type="link"
                 icon={<FiEdit3 />}
-                onClick={() => onEdit(record)}
+                onClick={() => handleEdit(record)}
               />
             </Tooltip>
             <Tooltip title="Delete">

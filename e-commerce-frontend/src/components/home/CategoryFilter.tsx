@@ -18,7 +18,7 @@ export const CategoryFilter = ({ categories, selected, onChange, onClear }: Prop
           className={`px-4 py-2 rounded-full border transition ${
             selected.includes(cat.id)
               ? "bg-stone-600 text-white border-stone-600"
-              : "border-gray-300 text-gray-700 hover:bg-gray-100"
+              : "border-gray-300 text-stone-700 hover:bg-gray-100"
           }`}
         >
           {cat.name}
