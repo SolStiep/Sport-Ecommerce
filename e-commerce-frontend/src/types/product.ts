@@ -23,7 +23,6 @@ export interface Option {
   name: string;
   price: number;
   inStock: boolean;
-  conditionalPrices?: ConditionalPrice[];
 }
 
 export interface Part {
@@ -41,6 +40,7 @@ export interface RestrictionRule {
 export interface PriceConditionRule {
   ifOption: string;
   requiredOptions: string[];
+  price: number;
 }
 
 export interface Configurator {
