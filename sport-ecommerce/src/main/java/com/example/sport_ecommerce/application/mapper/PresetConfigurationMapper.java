@@ -43,7 +43,8 @@ public class PresetConfigurationMapper {
                 selected,
                 command.getName(),
                 null,
-                command.isActive()
+                command.isActive(),
+                1
         );
 
         preset.setPrice(command.getPrice() != null ? command.getPrice() : product.getConfigurator().calculatePrice(preset));
