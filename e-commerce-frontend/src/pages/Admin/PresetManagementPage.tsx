@@ -20,7 +20,7 @@ export const PresetManagementPage = () => {
 
   useEffect(() => {
     fetchPresets();
-  }, [fetchPresets]);
+  }, []);
 
   const handleDelete = async () => {
     if (presetToDelete) {
