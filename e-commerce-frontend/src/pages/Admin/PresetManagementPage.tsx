@@ -6,6 +6,7 @@ import { Layout } from "@/components/layout/Layout";
 import { PresetList } from "@/components/organisms/presets/PresetList";
 import { PresetDetailsModal } from "@/components/organisms/presets/PresetDetailsModal";
 import { UnderConstructionModal } from "@/components/molecules/UnderConstructionModal";
+import { ConfirmModal } from "@/components/molecules/ConfirmModal"; 
 import { usePreset } from "@/contexts/PresetContext";
 
 export const PresetManagementPage = () => {
@@ -13,18 +14,27 @@ export const PresetManagementPage = () => {
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [showConstructionModal, setShowConstructionModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [presetToDelete, setPresetToDelete] = useState<string | null>(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchPresets();
   }, [fetchPresets]);
 
-  const handleDelete = async (id) => {
-    await removePreset(id);
-    setDetailsModalVisible(false);
+  const handleDelete = async () => {
+    if (presetToDelete) {
+      await removePreset(presetToDelete);
+      setShowConfirmModal(false); 
+    }
   };
 
-  const handleEdit = (presetId) => {
+  const handleConfirmDelete = (id: string) => {
+    setPresetToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  const handleEdit = (presetId: string) => {
     navigate(`/admin/presets/${presetId}`);
   };
 
@@ -51,7 +61,7 @@ export const PresetManagementPage = () => {
           presets={presets}
           onView={handleView}
           onEdit={(p) => handleEdit(p.id)}
-          onDelete={handleDelete}
+          onDelete={handleConfirmDelete} 
         />
 
         <PresetDetailsModal
@@ -59,9 +69,23 @@ export const PresetManagementPage = () => {
           preset={selectedPreset}
           onClose={() => setDetailsModalVisible(false)}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={handleConfirmDelete}
+        />
+
+        <ConfirmModal
+          isOpen={showConfirmModal}
+          onConfirm={handleDelete}
+          onCancel={() => setShowConfirmModal(false)}
+          title="Delete Preset"
+          message="Are you sure you want to delete this preset?"
+          confirmText="Yes, Delete"
+          cancelText="Cancel"
         />
       </div>
+      <UnderConstructionModal
+        visible={showConstructionModal}
+        onClose={() => setShowConstructionModal(false)}
+      />
     </Layout>
   );
 };
