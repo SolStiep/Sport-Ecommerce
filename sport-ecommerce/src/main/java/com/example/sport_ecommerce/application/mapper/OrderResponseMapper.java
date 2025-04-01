@@ -24,5 +24,6 @@ public interface OrderResponseMapper {
     UserOrderSummaryResponse toSummary(Order order);
 
     List<UserOrderSummaryResponse> toSummaryList(List<Order> orders);
+    List<OrderDetailResponse> toDetailList(List<Order> orders);
 }
 

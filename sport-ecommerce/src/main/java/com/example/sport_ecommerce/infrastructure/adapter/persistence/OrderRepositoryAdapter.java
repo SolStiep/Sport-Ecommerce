@@ -29,14 +29,8 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort, ProductResol
     @Override
     public Order save(Order order) {
         OrderEntity entity = mapper.toEntity(order);
-        entity.setId(order.getId());
-        entity.setUser(UserEntity.builder().id(order.getUser().getId()).build());
-        entity.setItems(mapper.toEmbeddables(order.getItems()));
-
         OrderEntity saved = jpaRepository.save(entity);
-
         Order mapped = mapper.toDomain(saved);
-        mapped.setUser(order.getUser());
         mapped.setItems(mapper.toConfigurations(saved.getItems(), this));
         return mapped;
     }
@@ -59,9 +53,13 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort, ProductResol
         }).toList();
     }
 
-    @Override
     public Product resolveProduct(UUID productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+    }
+
+    @Override
+    public void deleteById(UUID orderId) {
+        jpaRepository.deleteById(orderId);
     }
 }

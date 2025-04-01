@@ -41,4 +41,9 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     public void deleteById(UUID productId) {
         jpaRepository.deleteById(productId);
     }
+
+    @Override
+    public ProductJpaRepository getJpaRepository() {
+        return jpaRepository;
+    }
 }

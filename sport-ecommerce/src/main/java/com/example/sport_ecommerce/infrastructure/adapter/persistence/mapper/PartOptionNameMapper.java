@@ -4,6 +4,7 @@ import com.example.sport_ecommerce.domain.model.PartOption;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class PartOptionNameMapper {
     @Named("fromName")
     public PartOption fromName(String name) {
         if (name == null) return null;
-        return new PartOption(name, 0f, true, List.of());
+        return new PartOption(name, 0f, true, new ArrayList<>());
     }
 
     @Named("toNames")

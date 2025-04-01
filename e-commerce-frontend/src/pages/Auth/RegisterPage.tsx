@@ -36,7 +36,7 @@ export const RegisterPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-stone-700">Name</label>
             <input
               type="text"
               value={name}
@@ -47,7 +47,7 @@ export const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-stone-700">Email</label>
             <input
               type="email"
               value={email}
@@ -58,7 +58,7 @@ export const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-stone-700">Password</label>
             <input
               type="password"
               value={password}
@@ -69,7 +69,7 @@ export const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Repeat Password</label>
+            <label className="block text-sm font-medium text-stone-700">Repeat Password</label>
             <input
               type="password"
               value={repeatPassword}
@@ -83,13 +83,13 @@ export const RegisterPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-stone-600 text-white py-2 rounded-md hover:bg-stone-700 transition"
           >
             Register
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-center text-gray-600">
+        <p className="mt-4 text-sm text-center text-stone-600">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600 hover:underline">
             Log in here

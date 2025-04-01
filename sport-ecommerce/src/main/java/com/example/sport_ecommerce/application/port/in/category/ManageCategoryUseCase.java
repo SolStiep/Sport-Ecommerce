@@ -9,6 +9,6 @@ import java.util.UUID;
 public interface ManageCategoryUseCase {
     CategoryResponse create(CategoryCommand command);
     CategoryResponse update(CategoryCommand command);
-    void delete(UUID productId);
+    void delete(UUID orderId);
     List<CategoryResponse> getAll();
 }

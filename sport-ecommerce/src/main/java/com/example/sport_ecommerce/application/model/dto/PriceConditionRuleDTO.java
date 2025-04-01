@@ -17,4 +17,5 @@ public class PriceConditionRuleDTO {
     private UUID ifOption;
     @EqualsAndHashCode.Include
     private List<UUID> requiredOptions;
+    private float price;
 }

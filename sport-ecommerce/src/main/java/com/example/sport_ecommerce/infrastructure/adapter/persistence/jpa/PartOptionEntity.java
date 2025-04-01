@@ -25,8 +25,4 @@ public class PartOptionEntity {
     @ManyToOne
     @JoinColumn(name = "part_id")
     private PartEntity part;
-
-    @OneToMany(mappedBy = "partOption", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ConditionalPriceEntity> conditionalPrices;
-
 }

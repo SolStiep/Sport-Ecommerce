@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class ProductEntityMapper {
@@ -31,9 +32,6 @@ public abstract class ProductEntityMapper {
             entity.setCategory(categoryEntityMapper.toEntity(product.getCategory()));
         }
 
-        Map<Rule, RuleEntity> ruleEntityMap = new IdentityHashMap<>();
-        Map<PartOption, PartOptionEntity> optionMap = new IdentityHashMap<>();
-
         if (product.getParts() != null) {
             List<PartEntity> partEntities = product.getParts().stream().map(part -> {
                 PartEntity partEntity = PartEntity.builder()
@@ -45,39 +43,21 @@ public abstract class ProductEntityMapper {
                 if (part.getOptions() != null) {
                     List<PartOptionEntity> optionEntities = part.getOptions().stream()
                             .map(option -> {
-                                PartOptionEntity optEntity = PartOptionEntity.builder()
+                                return PartOptionEntity.builder()
                                         .id(option.getId())
                                         .name(option.getName())
                                         .price(option.getPrice())
                                         .inStock(option.isInStock())
                                         .part(partEntity)
                                         .build();
-                                optionMap.put(option, optEntity);
-                                return optEntity;
-                            }).toList();
+                            }).collect(Collectors.toCollection(ArrayList::new));
                     partEntity.setOptions(optionEntities);
                 }
 
                 return partEntity;
-            }).toList();
+            }).collect(Collectors.toCollection(ArrayList::new));
 
             entity.setParts(partEntities);
-        }
-
-        if (product.getConfigurator() != null) {
-            ConfiguratorEntity configuratorEntity =
-                    configuratorMapper.toEntity(product.getConfigurator(), entity, ruleEntityMap, optionMap);
-            configuratorEntity.setProduct(entity);
-            entity.setConfigurator(configuratorEntity);
-        }
-
-        if (product.getParts() != null) {
-            for (Part part : product.getParts()) {
-                for (PartOption option : part.getOptions()) {
-                    PartOptionEntity optionEntity = optionMap.get(option);
-                    partOptionEntityMapper.mapConditionalPrices(option, optionEntity, ruleEntityMap);
-                }
-            }
         }
 
         return entity;
@@ -103,39 +83,6 @@ public abstract class ProductEntityMapper {
             ));
         }
 
-        Map<UUID, Rule> ruleMap = new HashMap<>();
-        Map<UUID, PartOption> partOptionMap = new HashMap<>();
-
-        if (entity.getConfigurator() != null) {
-            List<Rule> rules = entity.getConfigurator().getRules().stream()
-                    .map(ruleEntity -> {
-                        Rule rule;
-                        if (ruleEntity instanceof RestrictionRuleEntity restriction) {
-                            rule = ruleEntityMapper.toDomain(restriction);
-                        } else if (ruleEntity instanceof PriceConditionRuleEntity priceCondition) {
-                            rule = ruleEntityMapper.toDomain(priceCondition);
-                        } else {
-                            throw new IllegalArgumentException("Unknown rule type: " + ruleEntity.getClass());
-                        }
-
-                        if (ruleEntity.getId() != null) {
-                            rule.setId(ruleEntity.getId());
-                            ruleMap.put(ruleEntity.getId(), rule);
-                        }
-
-                        return rule;
-                    }).toList();
-
-            Configurator configurator = new Configurator(
-                    entity.getConfigurator().getId(),
-                    product,
-                    rules,
-                    entity.getConfigurator().getPriceStrategyType()
-            );
-            configurator.setProduct(product);
-            product.setConfigurator(configurator);
-        }
-
         if (entity.getParts() != null) {
             List<Part> parts = new ArrayList<>();
 
@@ -143,15 +90,35 @@ public abstract class ProductEntityMapper {
                 Part part = new Part(partEntity.getId(), partEntity.getName(), product, new ArrayList<>());
 
                 for (PartOptionEntity optEntity : partEntity.getOptions()) {
-                    PartOption option = partOptionEntityMapper.toDomain(optEntity, ruleMap);
+                    PartOption option = partOptionEntityMapper.toDomain(optEntity);
                     part.getOptions().add(option);
-                    partOptionMap.put(option.getId(), option);
                 }
 
                 parts.add(part);
             }
 
             product.setParts(parts);
+        }
+
+        if (entity.getConfigurator() != null) {
+            assert entity.getParts() != null;
+            List<PartOptionEntity> partOptionEntities = entity.getParts().stream()
+                    .flatMap(part -> part.getOptions().stream())
+                    .collect(Collectors.toCollection(ArrayList::new));
+            Configurator configurator = configuratorMapper.toDomain(entity.getConfigurator(), partOptionEntities);
+            configurator.setProduct(product);
+            product.setConfigurator(configurator);
+
+            for (Part part : product.getParts()) {
+                for (PartOption option : part.getOptions()) {
+                    List<PriceConditionRule> priceConditionRules = configurator.getRules().stream()
+                            .filter(rule -> rule instanceof PriceConditionRule)
+                            .map(rule -> (PriceConditionRule) rule)
+                            .filter(rule -> rule.getIfOption().getId().equals(option.getId()))
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    option.setPriceConditionRules(priceConditionRules);
+                }
+            }
         }
 
         return product;

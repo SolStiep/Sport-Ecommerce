@@ -15,5 +15,5 @@ public class CreatePresetConfigurationCommand {
     private String name;
     private boolean active;
     private Float price;
-    private Map<String, String> selectedOptions;
+    private Map<UUID, UUID> selectedOptions;
 }

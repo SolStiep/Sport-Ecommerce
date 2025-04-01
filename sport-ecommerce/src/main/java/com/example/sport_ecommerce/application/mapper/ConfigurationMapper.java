@@ -2,10 +2,7 @@ package com.example.sport_ecommerce.application.mapper;
 
 import com.example.sport_ecommerce.application.model.dto.ConfigurationDTO;
 import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
-import com.example.sport_ecommerce.domain.model.Configuration;
-import com.example.sport_ecommerce.domain.model.Part;
-import com.example.sport_ecommerce.domain.model.PartOption;
-import com.example.sport_ecommerce.domain.model.Product;
+import com.example.sport_ecommerce.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +35,18 @@ public class ConfigurationMapper {
             selected.put(part, option);
         });
 
-        return new Configuration(product, selected);
+        if (dto.isPreset()) {
+            return new PresetConfiguration(
+                    product,
+                    selected,
+                    dto.getPresetName(),
+                    dto.getPresetPrice(),
+                    true,
+                    dto.getQuantity()
+            );
+        }
+
+        return new Configuration(product, selected, dto.getQuantity());
     }
 
     public List<Configuration> toDomainList(List<ConfigurationDTO> dtos) {

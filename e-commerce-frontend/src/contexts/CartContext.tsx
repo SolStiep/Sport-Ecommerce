@@ -3,6 +3,7 @@ import {
     useContext,
     useState,
     ReactNode,
+    useEffect,
   } from "react";
   import { CartItem } from "@/types/cart";
   
@@ -17,7 +18,18 @@ import {
   const CartContext = createContext<CartContextType | undefined>(undefined);
   
   export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [cartItems, setCartItems] = useState<CartItem[]>(
+      JSON.parse(sessionStorage.getItem("cartItems") || "[]")
+    );
+
+    useEffect(() => {
+      const storedCartItems = JSON.parse(sessionStorage.getItem("cartItems") || "[]");
+      setCartItems(storedCartItems);
+    }, []);
+
+    useEffect(() => {
+      sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }, [cartItems]);
   
     const addItem = (item: CartItem) => {
       setCartItems((prev) => {
@@ -39,6 +51,7 @@ import {
   
     const clearCart = () => {
       setCartItems([]);
+      sessionStorage.removeItem("cartItems"); 
     };
   
     const getTotal = () => {

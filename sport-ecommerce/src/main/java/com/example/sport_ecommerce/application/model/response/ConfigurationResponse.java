@@ -14,4 +14,7 @@ public class ConfigurationResponse {
     private UUID productId;
     private String productName;
     private List<SelectedOptionResponse> selectedOptions;
+    private int quantity;
+    private boolean preset;
+    private float price;
 }

@@ -37,6 +37,12 @@ public class ProductController {
         return getProductCatalogUseCase.getAllProducts();
     }
 
+    @GetMapping("/full")
+    public ResponseEntity<List<ProductResponse>> getAllFullProducts() {
+        List<ProductResponse> fullProducts = getProductDetailUseCase.getAllProducts();
+        return ResponseEntity.ok(fullProducts);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID id) {
         ProductResponse product = getProductDetailUseCase.getProductById(id);

@@ -20,5 +20,8 @@ public class PriceConditionRuleEntity extends RuleEntity {
             inverseJoinColumns = @JoinColumn(name = "option_id")
     )
     private List<PartOptionEntity> requiredOptions;
+
+    @Column(name = "price", nullable = false)
+    private float price;
 }
 
