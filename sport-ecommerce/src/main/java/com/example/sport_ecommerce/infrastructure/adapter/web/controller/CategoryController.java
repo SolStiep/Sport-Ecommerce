@@ -5,6 +5,7 @@ import com.example.sport_ecommerce.application.model.command.CategoryCommand;
 import com.example.sport_ecommerce.application.model.response.CategoryResponse;
 import com.example.sport_ecommerce.application.port.in.category.ManageCategoryUseCase;
 import com.example.sport_ecommerce.domain.model.Category;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryCommand command) {
         CategoryResponse category = manageUseCase.create(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
@@ -32,6 +34,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<CategoryResponse> update(@PathVariable UUID id, @RequestBody @Valid CategoryCommand command) {
         command.setId(id);
         CategoryResponse category = manageUseCase.update(command);
@@ -40,6 +43,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         manageUseCase.delete(id);
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import com.example.sport_ecommerce.application.model.response.ProductSummaryResp
 import com.example.sport_ecommerce.application.port.in.product.GetProductCatalogUseCase;
 import com.example.sport_ecommerce.application.port.in.product.GetProductDetailUseCase;
 import com.example.sport_ecommerce.application.port.in.product.ManageProductUseCase;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ProductSummaryResponse> createProduct(@RequestBody @Valid ProductCommand command) {
         ProductSummaryResponse response = manageProductUseCase.create(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -51,6 +53,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         manageProductUseCase.delete(id);
         return ResponseEntity.noContent().build();

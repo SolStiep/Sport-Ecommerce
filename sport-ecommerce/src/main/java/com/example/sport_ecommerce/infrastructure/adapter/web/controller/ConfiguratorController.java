@@ -3,6 +3,7 @@ package com.example.sport_ecommerce.infrastructure.adapter.web.controller;
 import com.example.sport_ecommerce.application.model.dto.ConfiguratorDTO;
 import com.example.sport_ecommerce.application.model.response.ConfiguratorResponse;
 import com.example.sport_ecommerce.application.port.in.configurator.ManageConfiguratorUseCase;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/configurator")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ConfiguratorController {
     private final ManageConfiguratorUseCase manageUseCase;
 
