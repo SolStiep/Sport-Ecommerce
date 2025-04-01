@@ -34,4 +34,10 @@ public class GetUserOrdersService implements GetUserOrdersUseCase {
         List<Order> orders = orderRepository.findByUserId(user.getId());
         return responseMapper.toDetailList(orders);
     }
+
+    @Override
+    public List<OrderDetailResponse> getOrders() {
+        List<Order> orders = orderRepository.getAll();
+        return responseMapper.toDetailList(orders);
+    }
 }

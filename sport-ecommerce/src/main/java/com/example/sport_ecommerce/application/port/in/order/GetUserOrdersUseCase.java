@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface GetUserOrdersUseCase {
     List<OrderDetailResponse> getOrdersByUser();
+    List<OrderDetailResponse> getOrders();
 }

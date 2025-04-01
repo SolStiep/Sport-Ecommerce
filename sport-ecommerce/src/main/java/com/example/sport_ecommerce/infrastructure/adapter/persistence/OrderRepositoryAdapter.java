@@ -53,6 +53,15 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort, ProductResol
         }).toList();
     }
 
+    @Override
+    public List<Order> getAll() {
+        return jpaRepository.findAll().stream().map(entity -> {
+            Order order = mapper.toDomain(entity);
+            order.setItems(mapper.toConfigurations(entity.getItems(), this));
+            return order;
+        }).toList();
+    }
+
     public Product resolveProduct(UUID productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
