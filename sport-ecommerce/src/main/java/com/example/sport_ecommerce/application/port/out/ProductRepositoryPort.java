@@ -1,6 +1,7 @@
 package com.example.sport_ecommerce.application.port.out;
 
 import com.example.sport_ecommerce.domain.model.Product;
+import com.example.sport_ecommerce.infrastructure.adapter.persistence.repository.ProductJpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,5 @@ public interface ProductRepositoryPort {
     Optional<Product> findById(UUID id);
     Product save(Product product);
     void deleteById(UUID id);
+    ProductJpaRepository getJpaRepository();
 }

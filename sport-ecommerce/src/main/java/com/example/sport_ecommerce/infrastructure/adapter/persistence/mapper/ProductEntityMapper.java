@@ -50,12 +50,12 @@ public abstract class ProductEntityMapper {
                                         .inStock(option.isInStock())
                                         .part(partEntity)
                                         .build();
-                            }).toList();
+                            }).collect(Collectors.toCollection(ArrayList::new));
                     partEntity.setOptions(optionEntities);
                 }
 
                 return partEntity;
-            }).toList();
+            }).collect(Collectors.toCollection(ArrayList::new));
 
             entity.setParts(partEntities);
         }
@@ -104,7 +104,7 @@ public abstract class ProductEntityMapper {
             assert entity.getParts() != null;
             List<PartOptionEntity> partOptionEntities = entity.getParts().stream()
                     .flatMap(part -> part.getOptions().stream())
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
             Configurator configurator = configuratorMapper.toDomain(entity.getConfigurator(), partOptionEntities);
             configurator.setProduct(product);
             product.setConfigurator(configurator);
@@ -115,7 +115,7 @@ public abstract class ProductEntityMapper {
                             .filter(rule -> rule instanceof PriceConditionRule)
                             .map(rule -> (PriceConditionRule) rule)
                             .filter(rule -> rule.getIfOption().getId().equals(option.getId()))
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toCollection(ArrayList::new));
                     option.setPriceConditionRules(priceConditionRules);
                 }
             }

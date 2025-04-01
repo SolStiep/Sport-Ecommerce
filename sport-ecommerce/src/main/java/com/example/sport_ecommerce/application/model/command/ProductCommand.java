@@ -1,6 +1,5 @@
 package com.example.sport_ecommerce.application.model.command;
 
-import com.example.sport_ecommerce.application.model.dto.ConfiguratorDTO;
 import com.example.sport_ecommerce.application.model.dto.PartDTO;
 import lombok.*;
 import java.util.List;

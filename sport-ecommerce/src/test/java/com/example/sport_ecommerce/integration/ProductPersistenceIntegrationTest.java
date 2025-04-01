@@ -1,8 +1,14 @@
 package com.example.sport_ecommerce.integration;
 
+import com.example.sport_ecommerce.application.port.out.ConfiguratorRepositoryPort;
+import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
 import com.example.sport_ecommerce.domain.model.*;
 import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
+import com.example.sport_ecommerce.domain.model.rule.RestrictionRule;
 import com.example.sport_ecommerce.domain.model.rule.Rule;
+import com.example.sport_ecommerce.domain.model.service.Configurator;
+import com.example.sport_ecommerce.domain.model.valueobject.PriceStrategyType;
+import com.example.sport_ecommerce.domain.model.valueobject.RuleOperator;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.ProductEntity;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.CategoryEntityMapper;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.ProductEntityMapper;
@@ -15,60 +21,87 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
+import static com.example.sport_ecommerce.application.utils.ProductStructureUtils.findOptionByName;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
 public class ProductPersistenceIntegrationTest {
-
-    @Autowired
-    private ProductJpaRepository productJpaRepository;
-
-    @Autowired
-    private CategoryJpaRepository categoryJpaRepository;
-
-    @Autowired
-    private ProductEntityMapper productMapper;
-
-    @Autowired
-    private CategoryEntityMapper categoryMapper;
+    @Autowired private ProductJpaRepository productJpaRepository;
+    @Autowired private CategoryJpaRepository categoryJpaRepository;
+    @Autowired private ProductEntityMapper productMapper;
+    @Autowired private CategoryEntityMapper categoryMapper;
+    @Autowired private ProductRepositoryPort productRepositoryPort;
+    @Autowired private ConfiguratorRepositoryPort configuratorRepository;
 
     @Test
     void should_persist_and_restore_product_with_rules() {
+        // Arrange: persist product with configurator and rules
         var result = TestDataHelper.persistSampleProductWithRules(
+                productRepositoryPort,
+                categoryJpaRepository,
+                productMapper,
+                categoryMapper,
+                configuratorRepository
+        );
+
+        // Act: re-fetch the product from DB
+        Product restored = productRepositoryPort.findById(result.productId()).orElseThrow();
+
+        // Assert: product data
+        assertThat(restored).isNotNull();
+        assertThat(restored.getParts()).hasSize(5);
+
+        // Assert: configurator is restored
+        Configurator configurator = restored.getConfigurator();
+        assertThat(configurator).isNotNull();
+        assertThat(configurator.getProduct()).isNotNull(); // bidirectional
+        assertThat(configurator.getProduct().getId()).isEqualTo(restored.getId());
+
+        // Assert: rules
+        List<Rule> rules = configurator.getRules();
+        assertThat(rules).hasSize(2);
+
+        // Assert: price rule
+        PriceConditionRule priceRule = rules.stream()
+                .filter(r -> r instanceof PriceConditionRule)
+                .map(r -> (PriceConditionRule) r)
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(priceRule.getIfOption().getName()).isEqualTo("Full-suspension");
+        assertThat(priceRule.getRequiredOptions())
+                .extracting(PartOption::getName)
+                .containsExactly("Blue");
+        assertThat(priceRule.getPrice()).isEqualTo(10f);
+    }
+
+    @Test
+    void should_create_configurator_and_restore_rules_properly() {
+        var result = TestDataHelper.persistSampleProductWithoutRules(
                 productJpaRepository, categoryJpaRepository, productMapper, categoryMapper
         );
 
-        ProductEntity loadedEntity = productJpaRepository.findById(result.productId()).orElseThrow();
-        Product restored = productMapper.toDomain(loadedEntity);
+        Product product = result.domain();
 
-        assertThat(restored.getParts()).hasSize(5);
+        // Persist and get the configurator
+        Configurator configurator = TestDataHelper.createAndPersistConfigurator(product, configuratorRepository, productRepositoryPort);
 
-        PartOption restoredFullSuspension = restored.getParts().stream()
-                .flatMap(p -> p.getOptions().stream())
-                .filter(o -> o.getName().equals("Full-suspension"))
-                .findFirst()
-                .orElseThrow();
+        assertThat(configurator).isNotNull();
+        assertThat(configurator.getRules()).hasSize(2);
 
-        assertThat(restoredFullSuspension.getConditionalPrices()).hasSize(1);
+        // Ensure the configurator knows its product
+        Product linkedProduct = configurator.getProduct();
+        assertThat(linkedProduct).isNotNull();
+        assertThat(linkedProduct.getId()).isEqualTo(product.getId());
 
-        ConditionalPrice restoredPrice = restoredFullSuspension.getConditionalPrices().get(0);
-        Rule condition = restoredPrice.getCondition();
-
-        assertThat(condition).isInstanceOf(PriceConditionRule.class);
-        PriceConditionRule restoredRule = (PriceConditionRule) condition;
-
-        assertThat(restoredRule.getRequiredOptions()).extracting(PartOption::getName).contains("Blue");
-
-        assertThat(restoredPrice.getPrice()).isEqualTo(10f);
-
-        UUID expectedRuleId = restored.getConfigurator().getRules().stream()
+        List<PriceConditionRule> priceRules = configurator.getRules().stream()
                 .filter(r -> r instanceof PriceConditionRule)
-                .map(Rule::getId)
-                .findFirst()
-                .orElseThrow();
+                .map(r -> (PriceConditionRule) r)
+                .toList();
 
-        assertThat(restoredPrice.getCondition().getId()).isEqualTo(expectedRuleId);
+        assertThat(priceRules).hasSize(1);
+        assertThat(priceRules.get(0).getIfOption().getName()).isEqualTo("Full-suspension");
     }
 
 }

@@ -3,12 +3,11 @@ package com.example.sport_ecommerce.integration;
 import com.example.sport_ecommerce.application.model.dto.ConfigurationDTO;
 import com.example.sport_ecommerce.application.model.response.PrepareConfigurationResponse;
 import com.example.sport_ecommerce.application.port.in.configuration.PrepareConfigurationUseCase;
-import com.example.sport_ecommerce.domain.model.*;
-import com.example.sport_ecommerce.domain.model.rule.PriceConditionRule;
-import com.example.sport_ecommerce.domain.model.rule.RestrictionRule;
-import com.example.sport_ecommerce.domain.model.service.Configurator;
-import com.example.sport_ecommerce.domain.model.valueobject.PriceStrategyType;
-import com.example.sport_ecommerce.domain.model.valueobject.RuleOperator;
+import com.example.sport_ecommerce.application.port.out.ConfiguratorRepositoryPort;
+import com.example.sport_ecommerce.application.port.out.ProductRepositoryPort;
+import com.example.sport_ecommerce.domain.model.Part;
+import com.example.sport_ecommerce.domain.model.PartOption;
+import com.example.sport_ecommerce.domain.model.Product;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.CategoryEntity;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.jpa.ProductEntity;
 import com.example.sport_ecommerce.infrastructure.adapter.persistence.mapper.CategoryEntityMapper;
@@ -28,42 +27,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class ConfigurationIntegrationTest {
 
-    @Autowired
-    private PrepareConfigurationUseCase useCase;
-
-    @Autowired
-    private ProductJpaRepository productJpaRepository;
-
-    @Autowired
-    private CategoryJpaRepository categoryJpaRepository;
-
-    @Autowired
-    private ProductEntityMapper productMapper;
-
-    @Autowired
-    private CategoryEntityMapper categoryMapper;
+    @Autowired private PrepareConfigurationUseCase useCase;
+    @Autowired private ProductJpaRepository productJpaRepository;
+    @Autowired private CategoryJpaRepository categoryJpaRepository;
+    @Autowired private ProductEntityMapper productMapper;
+    @Autowired private CategoryEntityMapper categoryMapper;
+    @Autowired private ProductRepositoryPort productRepositoryPort;
+    @Autowired private ConfiguratorRepositoryPort configuratorRepository;
 
     @Test
-    void should_be_valid_and_include_conditional_price() {
+    void should_calculate_price_including_price_condition_rule_when_configuration_is_valid() {
         var productHelper = TestDataHelper.persistSampleProductWithRules(
-                productJpaRepository, categoryJpaRepository, productMapper, categoryMapper
+                productRepositoryPort, categoryJpaRepository, productMapper, categoryMapper, configuratorRepository
         );
 
-        // Act: Build ConfigurationDTO with UUIDs
         Product product = productHelper.domain();
         UUID productId = productHelper.productId();
 
-        ConfigurationDTO configDTO = getConfigurationDTO(product, productId);
+        ConfigTestData configData = getConfigurationTestData(product, productId);
+        PrepareConfigurationResponse result = useCase.prepare(configData.dto());
 
-        // Act
-        PrepareConfigurationResponse result = useCase.prepare(configDTO);
-
-        // Assert
+        // Assertions
         assertThat(result.isValid()).isTrue();
         assertThat(result.getTotalPrice()).isEqualTo(353.0f); // 343 base + 10 conditional
+
+        assertThat(result.getSelectedOptions()).hasSize(5);
+        UUID expectedOptionId = configData.optionIds().get("Full-suspension");
+        UUID selectedOptionId = result.getSelectedOptions().stream()
+                .filter(opt -> opt.getPartId().equals(configData.partIds().get("Frame Type")))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Part not found in response"))
+                .getOptionId();
+
+        assertThat(selectedOptionId).isEqualTo(expectedOptionId);
     }
 
-    private ConfigurationDTO getConfigurationDTO(Product product, UUID productId) {
+    private record ConfigTestData(ConfigurationDTO dto, Map<String, UUID> partIds, Map<String, UUID> optionIds) {}
+
+    private ConfigTestData getConfigurationTestData(Product product, UUID productId) {
         Map<String, UUID> partIds = new HashMap<>();
         Map<String, UUID> optionIds = new HashMap<>();
 
@@ -82,6 +83,15 @@ public class ConfigurationIntegrationTest {
                 partIds.get("Chain"), optionIds.get("Single-speed chain")
         );
 
-        return new ConfigurationDTO(productId, selectedOptions);
+        ConfigurationDTO dto = ConfigurationDTO.builder()
+                .productId(productId)
+                .selectedOptions(selectedOptions)
+                .quantity(1)
+                .preset(false)
+                .presetPrice(0f)
+                .presetName(null)
+                .build();
+
+        return new ConfigTestData(dto, partIds, optionIds);
     }
 }
