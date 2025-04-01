@@ -83,8 +83,8 @@ INSERT INTO preset_selected_options (preset_id, option_name, part_name) VALUES
 ('ba2c9ecb-328c-46c3-a432-a704f5eeafad', 'Single-speed chain', 'Chain'),
 ('ba2c9ecb-328c-46c3-a432-a704f5eeafad', 'Shiny', 'Frame Finish'),
 ('ba2c9ecb-328c-46c3-a432-a704f5eeafad', 'Full-suspension', 'Frame Type'),
-('ba2c9ecb-328c-46c3-a432-a704f5eeafad',	'Black', 'Rim Color'),
-('ba2c9ecb-328c-46c3-a432-a704f5eeafad',	'Fat bike wheels', 'Wheels'),
+('ba2c9ecb-328c-46c3-a432-a704f5eeafad', 'Black', 'Rim Color'),
+('ba2c9ecb-328c-46c3-a432-a704f5eeafad', 'Fat bike wheels', 'Wheels'),
 -- Classic Commuter
 ('0e1a8e1e-f0d5-48ae-9f25-1b08d6485d43', 'Diamond', 'Frame Type'),
 ('0e1a8e1e-f0d5-48ae-9f25-1b08d6485d43', 'Shiny', 'Frame Finish'),
@@ -97,8 +97,8 @@ INSERT INTO preset_selected_options (preset_id, option_name, part_name) VALUES
 ('1ff93b0f-d632-4741-8c91-967f1f09a991', 'Mountain wheels', 'Wheels'),
 ('1ff93b0f-d632-4741-8c91-967f1f09a991', 'Blue', 'Rim Color'),
 ('1ff93b0f-d632-4741-8c91-967f1f09a991', '8-speed chain', 'Chain'),
-
-('6a8cf228-65b1-4d89-9826-e8141447a621', 'Step-through', 'Frame Type'),
+-- Urban Cruiser
+('6a8cf228-65b1-4d89-9826-e8141447a621', 'Full-suspension', 'Frame Type'),
 ('6a8cf228-65b1-4d89-9826-e8141447a621', 'Matte', 'Frame Finish'),
 ('6a8cf228-65b1-4d89-9826-e8141447a621', 'Road wheels', 'Wheels'),
 ('6a8cf228-65b1-4d89-9826-e8141447a621', 'Blue', 'Rim Color'),
