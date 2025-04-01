@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "antd";
 import { toast } from "react-hot-toast";
 
@@ -38,6 +38,10 @@ export const AddToCartButton = ({
   const [priceViolations, setPriceViolations] = useState<any[]>([]);
   const [configurationData, setConfigurationData] = useState<any | null>(null);
   const { addItem } = useCart();
+
+  useEffect(() => {
+    setIsValidConfiguration(false);
+  }, [selectedOptions, setIsValidConfiguration]);
 
   const handleAddToCart = async () => {
     setLoading(true);
@@ -100,8 +104,8 @@ export const AddToCartButton = ({
     if (priceViolations.length === 0) return null;
 
     return (
-      <div className="text-yellow-500 mt-2">
-        <h3 className="font-semibold">Price Violations:</h3>
+      <div className="text-stone-500 mt-2">
+        <h3 className="text-red-500 font-semibold">Price Rules:</h3>
         <ul>
           {priceViolations.map((violation, index) => (
             <li key={index}>
@@ -121,7 +125,12 @@ export const AddToCartButton = ({
   };
 
   return (
-    <div className="text-right mt-6">
+    <div className="flex justify-between items-start mt-6">
+      <div className="text-left">
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+
+        {renderPriceViolations()}
+      </div>
       <button
         onClick={handleAddToCart}
         loading={loading}
@@ -130,10 +139,6 @@ export const AddToCartButton = ({
       >
         {isValidConfiguration ? "Add to Cart" : "Validate"}
       </button>
-
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-
-      {renderPriceViolations()}
     </div>
   );
 };

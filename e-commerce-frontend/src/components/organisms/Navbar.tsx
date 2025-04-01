@@ -6,6 +6,7 @@ import {
   FiList,
   FiGrid,
   FiSettings,
+  FiFileText,
 } from "react-icons/fi";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -95,6 +96,13 @@ export const Navbar = () => {
                       onClick={() => setMenuOpen(false)}
                     >
                       <FiSettings className="mr-2" /> Presets
+                    </Link>
+                    <Link
+                      to="/admin/orders"
+                      className="flex items-center px-4 py-2 text-sm text-stone-700 hover:bg-gray-100"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <FiFileText className="mr-2" /> Orders
                     </Link>
                   </>
                 )}
