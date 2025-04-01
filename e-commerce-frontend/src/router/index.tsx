@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/products/:productId/edit",
+    path: "/admin/products/:productId",
     element: (
       <AdminRoute>
         <ProductFormPage />
@@ -69,6 +69,14 @@ export const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <PresetManagementPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/presets/:presetId",
+    element: (
+      <AdminRoute>
+        <PresetCreatorPage />
       </AdminRoute>
     ),
   },

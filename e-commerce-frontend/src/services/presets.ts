@@ -17,6 +17,11 @@ class PresetService {
     return data;
   }
 
+  async update(presetId: string, presetData: Preset): Promise<Preset> {
+    const { data } = axiosInstance.put(`/presets/${presetId}`, presetData);
+    return data;
+  }
+
   async delete(id: string): Promise<void> {
     await axiosInstance.delete(`/presets/${id}`);
   }

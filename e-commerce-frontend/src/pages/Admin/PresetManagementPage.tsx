@@ -21,8 +21,7 @@ export const PresetManagementPage = () => {
   };
 
   const handleEdit = (presetId) => {
-    setShowConstructionModal(true);
-    // navigate(`/admin/presets/${presetId}/edit`);
+    navigate(`/admin/presets/${presetId}`);
   };
 
   const handleView = (preset) => {
@@ -57,11 +56,6 @@ export const PresetManagementPage = () => {
           onClose={() => setDetailsModalVisible(false)}
           onEdit={handleEdit}
           onDelete={handleDelete}
-        />
-
-        <UnderConstructionModal
-          visible={showConstructionModal}
-          onClose={() => setShowConstructionModal(false)}
         />
       </div>
     </Layout>
