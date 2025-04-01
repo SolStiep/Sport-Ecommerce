@@ -52,12 +52,10 @@ export const PresetProvider = ({ children }: { children: ReactNode }) => {
 
   const updatePreset = async (id: string, data: Partial<Preset>) => {
     await presetService.update(id, data);
-    fetchPresets();
   };
 
   const createPreset = async (data: Partial<Preset>) => {
     await presetService.create(data);
-    fetchPresets();
   };
 
   useEffect(() => {

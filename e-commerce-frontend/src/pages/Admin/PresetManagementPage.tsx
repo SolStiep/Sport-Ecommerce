@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
@@ -9,11 +9,15 @@ import { UnderConstructionModal } from "@/components/molecules/UnderConstruction
 import { usePreset } from "@/contexts/PresetContext";
 
 export const PresetManagementPage = () => {
-  const { presets, removePreset } = usePreset();
+  const { presets, removePreset, fetchPresets } = usePreset();
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [showConstructionModal, setShowConstructionModal] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchPresets();
+  }, [fetchPresets]);
 
   const handleDelete = async (id) => {
     await removePreset(id);
