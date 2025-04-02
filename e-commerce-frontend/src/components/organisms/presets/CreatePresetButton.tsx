@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 
+import { usePreset } from "@/contexts/PresetContext";
 import presetService from "@/services/presets";
 import configuratorService from "@/services/configurations";
 
@@ -11,6 +13,8 @@ interface Props {
   onReset: () => void;
   name: string;
   price: number;
+  isEditing?: boolean;
+  presetId?: string;
 }
 
 export const CreatePresetButton = ({
@@ -19,10 +23,14 @@ export const CreatePresetButton = ({
   onReset,
   name,
   price,
+  isEditing = false,
+  presetId,
 }: Props) => {
   const [loading, setLoading] = useState(false);
+  const { updatePreset, createPreset } = usePreset();
+  const navigate = useNavigate();
 
-  const handleCreatePreset = async () => {
+  const handleSubmit = async () => {
     if (!name || price <= 0) {
       toast.error("Name and valid price are required");
       return;
@@ -33,7 +41,8 @@ export const CreatePresetButton = ({
       const response = await configuratorService.prepare({
         productId: product.id,
         selectedOptions,
-        preset: true,
+        preset: false,
+        quantity: 1,
       });
 
       if (response.status !== 200) {
@@ -41,17 +50,28 @@ export const CreatePresetButton = ({
         return;
       }
 
-      await presetService.create({
-        productId: product.id,
-        selectedOptions,
-        name,
-        price,
-      });
+      if (isEditing && presetId) {
+        await updatePreset(presetId, {
+          productId: product.id,
+          selectedOptions,
+          name,
+          price,
+        });
+        toast.success("Preset updated successfully!");
+      } else {
+        await createPreset({
+          productId: product.id,
+          selectedOptions,
+          name,
+          price,
+        });
+        toast.success("Preset created successfully!");
+      }
 
-      toast.success("Preset created successfully!");
       onReset();
+      navigate("/admin/presets");
     } catch (err) {
-      toast.error("Failed to create preset.");
+      toast.error("Failed to submit preset.");
     } finally {
       setLoading(false);
     }
@@ -63,11 +83,17 @@ export const CreatePresetButton = ({
   return (
     <div className="text-right mt-6">
       <Button
-        onClick={handleCreatePreset}
+        onClick={handleSubmit}
         disabled={isDisabled || loading}
         className="!bg-stone-500 !py-2 !px-4 !text-white !text-sm !hover:bg-stone-700"
       >
-        {loading ? "Validating..." : "Create Preset"}
+        {loading
+          ? isEditing
+            ? "Updating..."
+            : "Validating..."
+          : isEditing
+          ? "Update Preset"
+          : "Create Preset"}
       </Button>
     </div>
   );

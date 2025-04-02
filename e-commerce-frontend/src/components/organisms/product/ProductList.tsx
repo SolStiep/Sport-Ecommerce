@@ -1,7 +1,6 @@
 import { Product } from "@/types/product";
 import { Button, Space, Tooltip } from "antd";
 import { FiTrash, FiEye, FiEdit3 } from "react-icons/fi";
-
 import { GenericTable } from "@/components/molecules/GenericTable";
 
 interface Props {
@@ -42,7 +41,7 @@ export const ProductList = ({ products, onView, onEdit, onDelete }: Props) => {
               danger
               type="link"
               icon={<FiTrash />}
-              onClick={() => onDelete(record.id)}
+              onClick={() => onDelete(record.id)} 
             />
           </Tooltip>
         </Space>
@@ -50,7 +49,5 @@ export const ProductList = ({ products, onView, onEdit, onDelete }: Props) => {
     },
   ];
 
-  return (
-    <GenericTable<Product> data={products} columns={columns} rowKey="id" />
-  );
+  return <GenericTable<Product> data={products} columns={columns} rowKey="id" />;
 };

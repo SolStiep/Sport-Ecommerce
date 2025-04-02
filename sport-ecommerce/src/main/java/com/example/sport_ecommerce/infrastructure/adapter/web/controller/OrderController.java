@@ -6,6 +6,7 @@ import com.example.sport_ecommerce.application.port.in.order.CreateOrderUseCase;
 import com.example.sport_ecommerce.application.port.in.order.DeleteOrderUseCase;
 import com.example.sport_ecommerce.application.port.in.order.GetOrderDetailUseCase;
 import com.example.sport_ecommerce.application.port.in.order.GetUserOrdersUseCase;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
@@ -40,6 +42,12 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderDetailResponse>> getOrdersByUser() {
         return ResponseEntity.ok(getUserOrdersUseCase.getOrdersByUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDetailResponse>> getOrders() {
+        return ResponseEntity.ok(getUserOrdersUseCase.getOrders());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

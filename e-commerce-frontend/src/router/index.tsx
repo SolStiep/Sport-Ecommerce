@@ -10,6 +10,7 @@ import { ProductFormPage } from "@/pages/Admin/ProductFormPage";
 import { ConfiguratorFormPage } from "@/pages/Admin/ConfiguratorFormPage";
 import { PresetCreatorPage } from "@/pages/Admin/PresetCreatorPage";
 import { PresetManagementPage } from "@/pages/Admin/PresetManagementPage";
+import { OrderPage } from "@/pages/Admin/OrderPage";
 import { OrderHistoryPage } from "@/pages/Order/OrderHistoryPage";
 import { ProductCustomizationPage } from "@/pages/ProductCustomization/ProductCustomizationPage";
 import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/products/:productId/edit",
+    path: "/admin/products/:productId",
     element: (
       <AdminRoute>
         <ProductFormPage />
@@ -69,6 +70,22 @@ export const router = createBrowserRouter([
     element: (
       <AdminRoute>
         <PresetManagementPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/presets/:presetId",
+    element: (
+      <AdminRoute>
+        <PresetCreatorPage />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "/admin/orders",
+    element: (
+      <AdminRoute>
+        <OrderPage />
       </AdminRoute>
     ),
   },

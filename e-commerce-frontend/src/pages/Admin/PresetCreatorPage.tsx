@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import productService from "@/services/products";
-import { Summary } from "@/components/organisms/customProduct/Summary";
-import { PartConfigurator } from "@/components/organisms/customProduct/PartConfigurator";
-import { ProductSelector } from "@/components/organisms/customProduct/ProductSelector";
-import { CreatePresetButton } from "@/components/organisms/presets/CreatePresetButton";
+import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
+import { ProductSelector } from "@/components/organisms/customProduct/ProductSelector";
+import { PartConfigurator } from "@/components/organisms/customProduct/PartConfigurator";
+import { Summary } from "@/components/organisms/customProduct/Summary";
+import { CreatePresetButton } from "@/components/organisms/presets/CreatePresetButton";
+import { usePreset } from "@/contexts/PresetContext";
+import { useProduct } from "@/contexts/ProductContext";
 import { Product } from "@/types/product";
 
 export const PresetCreatorPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { presetId } = useParams();
+  const { presets } = usePreset();
+  const { products } = useProduct();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [availableOptions, setAvailableOptions] = useState<Record<string, string[]>>({});
@@ -16,12 +20,48 @@ export const PresetCreatorPage = () => {
   const [presetPrice, setPresetPrice] = useState<number>(0);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await productService.fetchProducts();
-      setProducts(data);
-    };
-    fetchProducts();
-  }, []);
+    if (presetId) {
+      const presetToEdit = presets.find((p) => p.id === presetId);
+      if (presetToEdit) {
+        setPresetName(presetToEdit.name);
+        setPresetPrice(presetToEdit.price);
+
+        const product = products.find((p) => p.id === presetToEdit.product.id);
+        
+        if (product) {
+          setSelectedProduct(product);
+          const mappedOptions = Object.keys(presetToEdit.selectedOptions).reduce(
+            (acc, partName) => {
+              const part = product.parts.find((p) => p.name === partName);
+              const option = part?.options.find(
+                (opt) => opt.name === presetToEdit.selectedOptions[partName]
+              );
+              if (part && option) {
+                acc[part.id] = option.id;
+              }
+              return acc;
+            },
+            {} as Record<string, string>
+          );
+
+          setSelectedOptions(mappedOptions);
+
+          const avail = product.parts.reduce((acc, part) => {
+            acc[part.id] = part.options.map((opt) => opt.id);
+            return acc;
+          }, {} as Record<string, string[]>);
+
+          setAvailableOptions(avail);
+        }
+      }
+    } else {
+      setSelectedProduct(null);
+      setSelectedOptions({});
+      setPresetName("");
+      setPresetPrice(0);
+      setAvailableOptions({});
+    }
+  }, [presetId, presets, products]);
 
   const handleProductSelect = (productId: string) => {
     const product = products.find((p) => p.id === productId);
@@ -52,8 +92,10 @@ export const PresetCreatorPage = () => {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center">Create a Preset Configuration</h1>
-        <ProductSelector products={products} onSelect={handleProductSelect} />
+        <h1 className="text-3xl font-bold mb-6 text-center">
+          {presetId ? "Edit Preset Product" : "Create Preset Product"}
+        </h1>
+        {!presetId && <ProductSelector products={products} onSelect={handleProductSelect} />}
 
         {selectedProduct && (
           <>
@@ -98,6 +140,8 @@ export const PresetCreatorPage = () => {
               name={presetName}
               price={presetPrice}
               onReset={resetForm}
+              presetId={presetId}
+              isEditing={!!presetId}
             />
           </>
         )}

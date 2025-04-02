@@ -91,7 +91,7 @@ public class OrderEntityMapper {
                             product,
                             selectedOptions,
                             embed.getProductName(),
-                            embed.getPrice(),
+                            embed.getPrice()/embed.getQuantity(),
                             true,
                             embed.getQuantity()
                     );

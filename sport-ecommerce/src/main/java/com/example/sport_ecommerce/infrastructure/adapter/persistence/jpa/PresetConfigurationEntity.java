@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
-@Table(name = "preset_configurations")
+@Table(name = "preset_configurations",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "name")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

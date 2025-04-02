@@ -56,12 +56,13 @@ export const CartPage = () => {
     const items = cartItems.map((item) => {
       const selectedOptions =
         item.type === "preset" ? mapNamesToIds(item) : item.selectedOptions;
-      return {
+        return {
         productId: item.product.id,
         selectedOptions,
         quantity: item.quantity,
         preset: item.type === "preset",
-        presetPrice: item.type === "preset" ? item.price : undefined,
+        presetPrice:
+          item.type === "preset" ? item.price : undefined,
         presetName: item.type === "preset" ? item.name : undefined,
       };
     });

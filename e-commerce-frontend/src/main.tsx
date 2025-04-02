@@ -34,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
                   <>
                     <RouterProvider router={router} />
                     <Toaster
-                      position="top-right"
+                      position="top-center"
                       toastOptions={{ duration: 3000 }}
                     />
                   </>

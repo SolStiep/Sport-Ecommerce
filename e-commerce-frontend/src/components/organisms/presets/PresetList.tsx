@@ -29,7 +29,7 @@ export const PresetList = ({ presets, onView, onEdit, onDelete }) => {
               danger
               type="link"
               icon={<FiTrash />}
-              onClick={() => onDelete(record.id)}
+              onClick={() => onDelete(record.id)} 
             />
           </Tooltip>
         </Space>

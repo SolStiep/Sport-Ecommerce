@@ -55,7 +55,9 @@ export const ProductCustomizationPage = () => {
 
   const handleOptionChange = (partId: string, optionId: string) => {
     const newSelectedOptions = { ...selectedOptions, [partId]: optionId };
+    setIsValidConfiguration(false);
     setSelectedOptions(newSelectedOptions);
+    setTotalPrice(0);
     setError(null);
   };
 

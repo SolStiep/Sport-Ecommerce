@@ -7,6 +7,7 @@ import com.example.sport_ecommerce.application.model.response.PresetConfiguratio
 import com.example.sport_ecommerce.application.port.in.configuration.GetPresetConfigurationsUseCase;
 import com.example.sport_ecommerce.application.port.in.configuration.ManagePresetConfigurationUseCase;
 import com.example.sport_ecommerce.domain.model.PresetConfiguration;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class PresetConfigurationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<PresetConfigurationResponse> create(@RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration created = manageUseCase.create(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseMapper.toConfigurationResponse(created));
@@ -35,6 +37,7 @@ public class PresetConfigurationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<PresetConfigurationResponse> update(@PathVariable UUID id, @RequestBody @Valid CreatePresetConfigurationCommand command) {
         PresetConfiguration updated = manageUseCase.update(id, command);
         return ResponseEntity.ok(responseMapper.toConfigurationResponse(updated));
@@ -42,6 +45,7 @@ public class PresetConfigurationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         manageUseCase.delete(id);
         return ResponseEntity.noContent().build();
