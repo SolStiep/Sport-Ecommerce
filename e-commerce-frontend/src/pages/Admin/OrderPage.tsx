@@ -104,7 +104,7 @@ export const OrderPage = () => {
                           id: item.productId,
                           name: item.productName,
                           quantity: item.quantity,
-                          price: item.price,
+                          price: item.price/item.quantity,
                           selectedOptions,
                           product,
                           type: item.preset ? "preset" : "custom",

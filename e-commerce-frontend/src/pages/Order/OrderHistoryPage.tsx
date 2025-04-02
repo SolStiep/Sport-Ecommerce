@@ -80,7 +80,7 @@ export const OrderHistoryPage = () => {
                           id: item.productId,
                           name: item.productName,
                           quantity: item.quantity,
-                          price: item.price / item.quantity,
+                          price: item.price/item.quantity,
                           selectedOptions,
                           product,
                           type: "custom",
