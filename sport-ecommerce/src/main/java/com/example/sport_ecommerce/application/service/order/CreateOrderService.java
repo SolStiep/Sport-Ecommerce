@@ -13,6 +13,7 @@ import com.example.sport_ecommerce.domain.model.User;
 import com.example.sport_ecommerce.domain.model.service.Configurator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class CreateOrderService implements CreateOrderUseCase {
     private final OrderResponseMapper responseMapper;
 
     @Override
+    @Transactional
     public OrderDetailResponse createOrder(CreateOrderCommand command) {
         User user = userRepository.findByEmail(command.getUserEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
