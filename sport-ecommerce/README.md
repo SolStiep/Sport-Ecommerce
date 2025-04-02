@@ -62,6 +62,27 @@ You can run it directly from IntelliJ (`▶`) or via Gradle:
 The application will be available at:
 📍 http://localhost:8080
 
+## 🚀 Run with Docker
+
+On the root folder, build the image:
+```bash
+docker build -t sport-ecommerce .
+```
+
+Run the container:
+```bash
+docker run -p 8080:8080 \
+-e SPRING_PROFILES_ACTIVE=dev \
+-e JWT_SECRET=<secret> \
+-e JWT_COOKIE_NAME=JWT \
+-e JWT_JWTEXPIRATIONMS=36000000 \
+-e SPRING_DATASOURCE_URL=<db-url> \
+-e SPRING_DATASOURCE_USERNAME=<username> \
+-e SPRING_DATASOURCE_PASSWORD=<pass> \
+sport-ecommerce
+```
+
+
 ### 🔐 Authentication
 
 This backend uses JWT tokens for authentication.
