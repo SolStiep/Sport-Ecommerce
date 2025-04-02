@@ -43,6 +43,13 @@ Please note that since free plans put services to sleep after inactivity, the in
 
 📘 Swagger API Docs: https://sport-ecommerce.onrender.com/swagger-ui/index.html
 
+⚠️ Production Notice
+While the application is fully functional and all core features (including CORS and authenticated endpoints) are working as expected, please note the following:
+The project is hosted using Render's free-tier services, which may introduce cold starts, higher response times, or temporary unavailability if the service has been idle.
+This environment is meant to provide a quick visual walkthrough of the application, and not optimized for high availability or performance.
+If you encounter any delays or intermittent issues during testing, it's likely due to these hosting limitations rather than problems with the application itself.
+Thanks for your patience and understanding 🙏
+
 ---
 
 ## 🚀 Getting Started
