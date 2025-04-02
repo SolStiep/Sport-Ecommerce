@@ -29,7 +29,6 @@ export const ProductDetailsModal = ({
       open={visible}
       onCancel={onClose}
       footer={null}
-      title="Product Details"
     >
       <div className="flex justify-end mb-4 gap-2">
         <Space size="middle">
