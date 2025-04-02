@@ -54,11 +54,11 @@ export const Navbar = () => {
         <Link to="/" className="text-stone-700 hover:text-black">
           Shop
         </Link>
-        <Link to="/about" className="text-stone-700 hover:text-black">
-          About
-        </Link>
         <Link to="/contact" className="text-stone-700 hover:text-black">
           Contact
+        </Link>
+        <Link to="/about" className="text-stone-700 hover:text-black">
+          About
         </Link>
 
         <Link

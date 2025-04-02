@@ -73,6 +73,12 @@ Demo credentials:
 
 Passwords are hashed with BCrypt and stored securely in the database.
 
+### 📚 Swagger UI
+
+Interactive API documentation is available via Swagger:
+
+🔗 http://localhost:8080/swagger-ui/index.html
+
 ### 📌 Notes
 
 - Flyway automatically runs database migrations on startup.
