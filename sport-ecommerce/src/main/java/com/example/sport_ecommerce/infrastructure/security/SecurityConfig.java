@@ -46,7 +46,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:5173"));
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:5173",
+                            "https://sport-ecommerce-1.onrender.com"
+                    ));
                     config.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                     config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
                     config.setAllowCredentials(true);

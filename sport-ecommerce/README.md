@@ -17,7 +17,24 @@ This is the backend for **Sport E-Commerce**, a modern ecommerce platform for se
 
 ---
 
-## 🚀 Running the Project Locally
+---
+
+## 🚀 Deployment Info
+
+Both the frontend and backend applications are deployed on Render using the free tier.
+
+Please note that since free plans put services to sleep after inactivity, the initial request might take a few seconds to respond. We appreciate your patience!
+
+🔗 URLs
+🌐 Frontend (Web App): https://sport-ecommerce-1.onrender.com
+
+🔙 Backend (API): https://sport-ecommerce.onrender.com
+
+📘 Swagger API Docs: https://sport-ecommerce.onrender.com/swagger-ui/index.html
+
+---
+
+## Running the Project Locally
 
 ### Prerequisites
 
