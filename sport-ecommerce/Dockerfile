@@ -8,6 +8,8 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 
+RUN echo "Listing contents" && ls -la && ls -la src
+
 RUN chmod +x ./gradlew
 RUN ./gradlew build -x test
 

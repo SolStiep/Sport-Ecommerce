@@ -1,0 +1,18 @@
+# Gradle output
+/build
+/.gradle
+**/build
+
+# IDE
+.idea
+*.iml
+*.class
+
+# System
+.DS_Store
+.env
+*.log
+
+# Node/npm (por si tenés frontend en el mismo repo)
+node_modules
+dist
