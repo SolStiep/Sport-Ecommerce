@@ -2,6 +2,12 @@
 
 Sport E-Commerce is a modern and fully-featured e-commerce platform designed for selling sports products. It consists of a **React + Vite** frontend and a **Spring Boot** backend, providing seamless shopping experiences for customers and an intuitive admin dashboard for managing products, orders, and presets.
 
+## 📖 Full project documentation: [Project Scope & Architecture](https://ethereal-magician-915.notion.site/Project-Scope-E-commerce-sport-shop-Achievable-in-2-Weeks-1bc64e827cec80d6bc06d7caa1c3844e)
+
+This documentation includes:
+- Project Scope: Business requirements and objectives.
+- Project Architecture: technologies, decisions, class diagram and entity-relation diagram.
+
 ---
 
 ## 📦 Tech Stack
