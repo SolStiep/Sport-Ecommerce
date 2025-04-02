@@ -6,7 +6,7 @@ Sport E-Commerce is a modern and fully-featured e-commerce platform designed for
 
 ## 📦 Tech Stack
 
-### Frontend (view more)
+### Frontend [(view more)](https://github.com/SolStiep/Sport-Ecommerce/blob/main/e-commerce-frontend/README.md)
 - ⚛️ **React 19** + **Vite**
 - 💨 **TailwindCSS v4** + **Ant Design**
 - 🧪 **TypeScript**
@@ -14,7 +14,7 @@ Sport E-Commerce is a modern and fully-featured e-commerce platform designed for
 - 🔐 **JWT-based authentication**
 - 📦 **Axios**
 
-### Backend (view more)
+### Backend [(view more)](https://github.com/SolStiep/Sport-Ecommerce/blob/main/sport-ecommerce/README.md)
 - ☕ **Java 17** + **Spring Boot 3.4.3**
 - 🔐 **Spring Security 6 (JWT-based auth)**
 - 🗃️ **PostgreSQL** + **Hibernate**
