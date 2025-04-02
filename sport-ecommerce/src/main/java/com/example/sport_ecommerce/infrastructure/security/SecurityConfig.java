@@ -51,7 +51,7 @@ public class SecurityConfig {
                             "https://sport-ecommerce-1.onrender.com"
                     ));
                     config.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-                    config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                    config.addAllowedHeader("*");
                     config.setAllowCredentials(true);
                     return config;
                 }))

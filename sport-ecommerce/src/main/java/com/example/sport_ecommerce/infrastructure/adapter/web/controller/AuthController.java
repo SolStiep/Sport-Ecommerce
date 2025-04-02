@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,13 +49,14 @@ public class AuthController {
                 )
         );
 
-        Cookie jwtCookie = new Cookie(cookieName, token);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(60 * 60 * 10); // 10 hours
-        // jwtCookie.setSecure(true); // only with HTTPS
-
-        response.addCookie(jwtCookie);
+        ResponseCookie responseCookie = ResponseCookie.from(cookieName, token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("None")
+                .maxAge(60 * 60 * 10)
+                .build();
+        response.addHeader("Set-Cookie", responseCookie.toString());
         return ResponseEntity.ok(loginResponse);
     }
 
